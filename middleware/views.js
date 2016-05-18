@@ -131,6 +131,7 @@ module.exports = function(app) {
 
       var outputHTML = swig.renderFile(app.get('views') + '/layouts/' + locals.layout, locals);
 
+      // Auto minify the HTML
       outputHTML = minify(outputHTML, {
         removeComments: true,
         collapseWhitespace: true

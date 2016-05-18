@@ -16,9 +16,15 @@ module.exports = function(app) {
   // Mashed and compressed JS files!
   //
   var files_combined = [];
-  var combined = require(path.resolve('./public/ui/js/common.js'));
-  for ( var i=0; i<combined.files.length; i++ ) {
-    files_combined.push(path.resolve('./public/ui/js/' + combined.files[i]));
+
+  var jsCombinedPath = path.resolve('./public/ui/js/common.js')
+  if (fs.existsSync(jsCombinedPath)) {
+    var combined = require(jsCombinedPath);
+    if ( combined ) {
+      for ( var i=0; i<combined.files.length; i++ ) {
+        files_combined.push(path.resolve('./public/ui/js/' + combined.files[i]));
+      }
+    }
   }
 
   app.use('/ui/js/common.js', function(req, res, next){
