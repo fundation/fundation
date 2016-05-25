@@ -69,10 +69,8 @@ module.exports = function(app) {
   // Load the favicon
   //
   var faviconPath = './public/favicon.ico';
-  try {
+  if (fs.existsSync(faviconPath)) {
     app.use(favicon(faviconPath));
-  } catch (e) {
-
   }
 
 };
