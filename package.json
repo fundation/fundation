@@ -1,6 +1,6 @@
 {
   "name": "fundation",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Alexander Chan <fundation@nonstopcoder.com>",
   "description": "Fun and simple way to build a site",
   "license": "MIT",
@@ -21,7 +21,7 @@
     "debug": "2.2.0",
     "less-middleware": "2.1.0",
     "mysql": "2.10.2",
-    "mongodb": "2.1.18",
+    "mongodb": "2.1.20",
     "memcached": "2.2.1",
     "serve-favicon": "2.3.0",
     "swig": "1.4.2",
