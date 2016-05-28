@@ -2,6 +2,7 @@
 
 var debug          = require('debug')('fundation');
 var debugRoutes    = require('debug')('fundation:statics');
+var browserify     = require('browserify');
 var lessMiddleware = require('less-middleware');
 var express        = require('express');
 var favicon        = require('serve-favicon');
@@ -12,17 +13,22 @@ module.exports = function(app) {
 
   debug("Setting up CSS and JS");
 
+  var b = browserify();
+
   //
   // Mashed and compressed JS files!
   //
   var files_combined = [];
 
-  var jsCombinedPath = path.resolve('./public/ui/js/common.js')
+  var jsCombinedPath = path.resolve('./public/ui/js/common.js');
   if (fs.existsSync(jsCombinedPath)) {
     var combined = require(jsCombinedPath);
     if ( combined ) {
+      for ( var i=0; i<combined.browserify.length; i++ ) {
+        b.require(combined.browserify[i]);
+      }
       for ( var i=0; i<combined.files.length; i++ ) {
-        files_combined.push(path.resolve('./public/ui/js/' + combined.files[i]));
+        b.require(path.resolve('./public/ui/js/' + combined.files[i]), { expose: combined.files[i] });
       }
     }
   }
@@ -30,12 +36,7 @@ module.exports = function(app) {
   app.use('/ui/js/common.js', function(req, res, next){
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('Content-Type', 'text/javascript');
-
-    files_combined.forEach(function (path, k) {
-      var contents = fs.readFileSync(path);
-      res.write(contents + ';');
-    });
-    res.end();
+    b.bundle().pipe(res);
   });
 
   //

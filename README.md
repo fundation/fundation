@@ -8,7 +8,7 @@ var app = require('express')();
 
 app.use(fundation.init());
 
-app.listen(3000)
+app.listen(8080)
 ```
 
 ## Installation
