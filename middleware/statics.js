@@ -19,16 +19,34 @@ module.exports = function(app) {
   // Mashed and compressed JS files!
   //
   var files_combined = [];
-
   var jsCombinedPath = path.resolve('./public/ui/js/common.js');
+
+  // Make sure that the file "/public/ui/js/common.js" exists
   if (fs.existsSync(jsCombinedPath)) {
+    // Get the contents of the file
     var combined = require(jsCombinedPath);
-    if ( combined ) {
-      for ( var i=0; i<combined.browserify.length; i++ ) {
-        b.require(combined.browserify[i]);
+
+    // Make sure that its a module that was returned
+    if (combined) {
+      // Todo: Rewrite the code below because it can look cleaner
+      // Go through each element that needs to be browserify'ed
+      for (var i=0; i<combined.browserify.length; i++) {
+        if (fs.existsSync(path.resolve('./node_modules/' + combined.browserify[i]))) {
+          debug("  Browserifying: " + combined.browserify[i]);
+          b.require(combined.browserify[i]);
+        } else if (fs.existsSync(path.resolve('./public/ui/js/' + combined.files[i]))) {
+          debug("  Browserifying: " + combined.files[i]);
+          b.require(path.resolve('./public/ui/js/' + combined.files[i]), {
+            expose: combined.files[i]
+          });
+        } else {
+          // Todo: Add better error handling when an invalid modules is supplied.
+        }
       }
-      for ( var i=0; i<combined.files.length; i++ ) {
-        b.require(path.resolve('./public/ui/js/' + combined.files[i]), { expose: combined.files[i] });
+      // Get all of the user defined JavaScript files
+      for (var i=0; i<combined.files.length; i++) {
+        debug("  Mashing: " + combined.files[i]);
+        files_combined.push(path.resolve('./public/ui/js/' + combined.files[i]));
       }
     }
   }
@@ -36,7 +54,18 @@ module.exports = function(app) {
   app.use('/ui/js/common.js', function(req, res, next){
     res.setHeader('Cache-Control', 'public, max-age=300');
     res.setHeader('Content-Type', 'text/javascript');
-    b.bundle().pipe(res);
+    b.bundle(function(error, buffer){
+      // Send the browerified results first
+      if (buffer) {
+        res.write(buffer + ';');
+      }
+      // Now send all of the user defined JavaScript
+      files_combined.forEach(function (path, k) {
+        var contents = fs.readFileSync(path);
+        res.write(contents + ';');
+      });
+      res.end();
+    });
   });
 
   //
@@ -50,7 +79,7 @@ module.exports = function(app) {
     dest: path.join('./public/ui/css')
   };
 
-  if ( app.get('env') !== 'production' ) {
+  if (app.get('env') !== 'production') {
     lessOptions.render = {
       sourceMap: {
         sourceMapFileInline: true
