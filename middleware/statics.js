@@ -30,23 +30,27 @@ module.exports = function(app) {
     if (combined) {
       // Todo: Rewrite the code below because it can look cleaner
       // Go through each element that needs to be browserify'ed
-      for (var i=0; i<combined.browserify.length; i++) {
-        if (fs.existsSync(path.resolve('./node_modules/' + combined.browserify[i]))) {
-          debug("  Browserifying: " + combined.browserify[i]);
-          b.require(combined.browserify[i]);
-        } else if (fs.existsSync(path.resolve('./public/ui/js/' + combined.files[i]))) {
-          debug("  Browserifying: " + combined.files[i]);
-          b.require(path.resolve('./public/ui/js/' + combined.files[i]), {
-            expose: combined.files[i]
-          });
-        } else {
-          // Todo: Add better error handling when an invalid modules is supplied.
+      if ( combined.browserify ) {
+        for (var i=0; i<combined.browserify.length; i++) {
+          if (fs.existsSync(path.resolve('./node_modules/' + combined.browserify[i]))) {
+            debug("  Browserifying: " + combined.browserify[i]);
+            b.require(combined.browserify[i]);
+          } else if (fs.existsSync(path.resolve('./public/ui/js/' + combined.files[i]))) {
+            debug("  Browserifying: " + combined.files[i]);
+            b.require(path.resolve('./public/ui/js/' + combined.files[i]), {
+              expose: combined.files[i]
+            });
+          } else {
+            // Todo: Add better error handling when an invalid modules is supplied.
+          }
         }
       }
       // Get all of the user defined JavaScript files
-      for (var i=0; i<combined.files.length; i++) {
-        debug("  Mashing: " + combined.files[i]);
-        files_combined.push(path.resolve('./public/ui/js/' + combined.files[i]));
+      if ( combined.files ) {
+        for (var i=0; i<combined.files.length; i++) {
+          debug("  Mashing: " + combined.files[i]);
+          files_combined.push(path.resolve('./public/ui/js/' + combined.files[i]));
+        }
       }
     }
   }

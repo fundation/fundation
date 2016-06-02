@@ -3,9 +3,14 @@
 // Required libraries
 var request = require('supertest');
 var assert = require('chai').assert;
-var app = require('express')();
 var fundation = require('../index.js');
+var app = require('express')();
 
+// Add fundation to express
+app.use(fundation.init());
+
+
+/*
 describe('Empty Route', function(){
   var response;
 
@@ -21,8 +26,8 @@ describe('Empty Route', function(){
 
   it('should return a 404', function(){
     assert.equal(response.status, 404);
-  })
-})
+  });
+});
 
 //
 //
@@ -34,7 +39,7 @@ describe('Homepage Route', function(){
   before(function(done){
     // Create homepage route.
     app.route('/').get(function (req, res, next) {
-      res.json({ moo: "cow" })
+      res.json({ moo: "cow" });
     });
 
     request(app)
@@ -51,9 +56,9 @@ describe('Homepage Route', function(){
 
   it('should have a cow', function(){
     assert.equal(response.body.moo, 'cow');
-  })
-})
-
+  });
+});
+*/
 
 
 

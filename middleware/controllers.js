@@ -35,10 +35,8 @@ module.exports = function(app) {
   //
   app.set('strict routing', true);
 
-
   // Read the routes folder
   glob("controllers/*.js", function (error, files) {
-
     // Add all of the routes
     files.forEach(function (routePath) {
       // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
