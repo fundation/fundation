@@ -62,17 +62,20 @@ module.exports = function(app) {
   // Call original render
   //
   var response = app.response;
-  var _render = response.render;
+  // var _render = response.render;
   var _json = response.json;
 
-  response.render = function( ) {
+  response._render = function() {
     var self = this;
     var selfArguments = arguments;
     selfArguments[1] = _.merge({}, this.req.commonLocals, selfArguments[1]);
 
     waitForPromises(selfArguments[1])
-    .then(function(locals){
-      _render.apply( self, selfArguments );
+    .then(function (locals) {
+      self.render.apply( self, selfArguments );
+    }, function (error) {
+      self.status(404);
+      self.render('404.swig');
     });
   };
 
@@ -99,13 +102,16 @@ module.exports = function(app) {
     }
 
     // Wait for the promises to finish
-    return Promise.all(promises)
-    .then(function (results) {
-      for ( var i=0; i<results.length; i++ ) {
-        locals[keys[i]] = results[i];
-      }
-
-      return locals;
+    return new Promise(function(resolve, reject) {
+      Promise.all(promises)
+      .then(function (results) {
+        for ( var i=0; i<results.length; i++ ) {
+          locals[keys[i]] = results[i];
+        }
+        resolve(locals);
+      }, function (error){
+        reject(error);
+      });
     });
   }
 

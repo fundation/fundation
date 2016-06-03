@@ -44,7 +44,7 @@ module.exports = function(app) {
       require(path.resolve(routePath))(app);
     });
 
-    // Put back the 404's for pages not in the routes
+    // 404 for pages not in the routes
     app.use(function (req, res, next) {
       res.status(404);
       res.render('404.swig');
