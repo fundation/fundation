@@ -1,12 +1,13 @@
 'use strict';
 
-var debug          = require('debug')('fundation');
-var debugRoutes    = require('debug')('fundation:views');
-var minify         = require('html-minifier').minify;
-var glob           = require("glob");
-var path           = require('path');
-var swig           = require('swig');
-var _              = require('lodash');
+var debug = require('debug')('fundation');
+var debugRoutes = require('debug')('fundation:views');
+var minify = require('html-minifier').minify;
+var glob = require("glob");
+var path = require('path');
+var swig = require('swig');
+var util = require('util');
+var _ = require('lodash');
 
 /**
  * Views
@@ -62,20 +63,22 @@ module.exports = function(app) {
   // Call original render
   //
   var response = app.response;
-  // var _render = response.render;
-  var _json = response.json;
+  response._render = response.render;
+  response._json = response.json;
 
-  response._render = function() {
+  // Re define render
+  response.render = function() {
     var self = this;
+
     var selfArguments = arguments;
     selfArguments[1] = _.merge({}, this.req.commonLocals, selfArguments[1]);
 
     waitForPromises(selfArguments[1])
     .then(function (locals) {
-      self.render.apply( self, selfArguments );
+      self._render.apply( self, selfArguments );
     }, function (error) {
       self.status(404);
-      self.render('404.swig');
+      self._render('404.swig');
     });
   };
 
@@ -86,7 +89,10 @@ module.exports = function(app) {
 
     waitForPromises(selfArguments[0])
     .then(function(locals){
-      _json.apply( self, selfArguments );
+      self._json.apply( self, selfArguments );
+    }, function (error) {
+      self.status(404);
+      self._json({});
     });
   };
 
