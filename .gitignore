@@ -7,3 +7,7 @@ Icon?
 node_modules
 *.log
 *.gz
+
+# IntelliJ
+*.iml
+.idea
