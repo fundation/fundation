@@ -58,11 +58,15 @@ module.exports = function(app) {
       switch(error.status) {
         case 400:
           res.status(400);
-          res.render('404.swig');
+          res.render('404.swig', {
+            layout: "blank.swig"
+          });
           break;
         case 404:
           res.status(404);
-          res.render('404.swig');
+          res.render('404.swig', {
+            layout: "blank.swig"
+          });
           break;
         default:
           res.status(500);
