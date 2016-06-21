@@ -55,7 +55,10 @@ module.exports = function(app, fundation) {
   var redisConfig = _.get(config, 'redis');
   if (redisConfig !== undefined) {
     var RedisStore = require('connect-redis')(session);
-    var client = redis.createClient();
+    var client = redis.createClient({
+      host: redisConfig.host,
+      port: redisConfig.port,
+    });
     sessionOptions = _.merge(sessionOptions, {
       store: new RedisStore({
         host: redisConfig.host,
