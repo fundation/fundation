@@ -80,7 +80,18 @@ module.exports = function(app) {
   //
   var lessOptions = {
     // debug: true,
-    dest: path.join('./public/ui/css')
+    dest: path.join('./public/ui/css'),
+    // Allow for a global mixins
+    preprocess: {
+      less: function(src, req) {
+        var less = fs.readFileSync(__dirname + '/../less/mixins.less');
+        try {
+          var preprocess = fs.readFileSync('./public/ui/less/preprocess.less');
+          less = less + preprocess;
+        } catch(error) { }
+        return less + src;
+      }
+    }
   };
 
   if (app.get('env') !== 'production') {

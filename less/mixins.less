@@ -1,0 +1,153 @@
+// MIXINS
+// =============================================================================
+// Mixins are a LESS feature and are used to add vendor prefixes to CSS rules
+// when needed.
+
+//
+.blur (@string: 8px) {
+  /* blur *///
+  -webkit-filter: blur(@string);
+     -moz-filter: blur(@string);
+       -o-filter: blur(@string);
+      -ms-filter: blur(@string);
+          filter: blur(@string);
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow
+.box-shadow (@string: 0 0 1em rgba(0, 0, 0, 0.25)) {
+  /* box-shadow *///
+  -webkit-box-shadow: @string;
+     -moz-box-shadow: @string;
+          box-shadow: @string;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius
+.border-radius (@string: 5px) {
+  /* border-radius *///
+  -webkit-border-radius: @string;
+     -moz-border-radius: @string;
+          border-radius: @string;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/transition
+.transition (@string: all 1s linear) {
+  /* transition *///
+  -webkit-transition: @string;
+     -moz-transition: @string;
+       -o-transition: @string;
+          transition: @string;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/transition
+.transition-delay (@string: 1s) {
+  /* transition-delay *///
+  -webkit-transition-delay: @string;
+     -moz-transition-delay: @string;
+       -o-transition-delay: @string;
+          transition-delay: @string;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/animation
+.animation (@string: spin 1s infinite linear) {
+  /* animation *///
+  -webkit-animation: @string;
+     -moz-animation: @string;
+       -o-animation: @string;
+          animation: @string;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/transform
+.transform (@string: rotate(-45deg)) {
+  /* transform *///
+  -webkit-transform: @string;
+     -moz-transform: @string;
+      -ms-transform: @string;
+       -o-transform: @string;
+          transform: @string;
+}
+
+// https://developer.mozilla.org/en-US/docs/Web/CSS/user-select
+.user-select (@string: none) {
+  /* user-select *///
+  -webkit-user-select: @string;
+     -moz-user-select: @string;
+      -ms-user-select: @string;
+          user-select: @string;
+}
+
+// Hide something visually but keep available for screen readers.
+// http://h5bp.com/v
+.hide-visually () {
+  /* hide-visually *///
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position:
+  absolute;
+  width: 1px;
+}
+
+// Align an object with absolute positioning
+// Used to align the Big Play Button in the corners or center
+.absolute-align (@align, @margin, @length) when (@align = top) {
+  top: @margin;
+}
+.absolute-align (@align, @margin, @length) when (@align = bottom) {
+  bottom: @margin;
+}
+.absolute-align (@align, @margin, @length) when (@align = left) {
+  left: @margin;
+}
+.absolute-align (@align, @margin, @length) when (@align = right) {
+  right: @margin;
+}
+.absolute-align (@align, @margin, @length) when (@align = center) {
+  /* Center it horizontally *///
+  left: 50%;
+  margin-left: (-(@length/2));
+  // margin-left: ((@length*-1)/2);
+}
+.absolute-align (@align, @margin, @length) when (@align = middle) {
+  /* Center it vertically *///
+  top: 50%;
+  margin-top: (-(@length/2));
+  // margin-top: ((@length*-1)/2);
+}
+
+// http://stackoverflow.com/questions/637921/opacity-of-background-but-not-the-text
+.background-color-with-alpha (@color, @alpha) {
+  @rgba: rgba(red(@color), green(@color), blue(@color), @alpha);
+  /* background-color-with-alpha *///
+  background-color: @color;
+  background-color: @rgba;
+  // No longer using MS filters because they break border radius in IE9
+  // @argb: argb(@rgba);
+  // filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{argb}, endColorstr=@{argb})";
+  // -ms-filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr=@{argb}, endColorstr=@{argb})";
+}
+
+.border-color-with-alpha (@color, @alpha) {
+  @rgba: rgba(red(@color), green(@color), blue(@color), @alpha);
+  /* border-color-with-alpha *///
+  border-color: @color;
+  border-color: @rgba;
+}
+
+// placeholder text rules
+.placeholder(@rules) {
+    &::-webkit-input-placeholder {
+        @rules();
+    }
+    &:-moz-placeholder {
+        @rules();
+    }
+    &::-moz-placeholder {
+        @rules();
+    }
+    &:-ms-input-placeholder {
+        @rules();
+    }
+}

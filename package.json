@@ -1,6 +1,6 @@
 {
   "name": "fundation",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "author": "Alexander Chan <fundation@nonstopcoder.com>",
   "description": "Fun and simple way to build a site",
   "license": "MIT",
@@ -51,6 +51,7 @@
     "LICENSE",
     "README.md",
     "index.js",
+    "less/",
     "lib/",
     "middleware/"
   ]

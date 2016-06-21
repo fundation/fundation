@@ -51,6 +51,8 @@ Fundation.prototype.init = function (options) {
       require('./middleware/middleware.js')(parent);
       require('./middleware/views.js')(parent);
       require('./middleware/controllers.js')(parent);
+
+      console.log("Fundation: started");
     });
 
   });
