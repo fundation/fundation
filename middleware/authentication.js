@@ -3,7 +3,6 @@
 var debug          = require('debug')('fundation');
 var debugAuth      = require('debug')('fundation:auth');
 var _              = require("lodash");
-var redis          = require("redis");
 var passport       = require("passport");
 var session        = require('express-session');
 var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
@@ -11,6 +10,8 @@ var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 module.exports = function(app, fundation) {
 
   var config = app.get('config');
+  var redis = app.get('redis');
+
   var userModel = fundation.model.user;
 
   // Only proceed if there is a session secret defined
@@ -53,17 +54,11 @@ module.exports = function(app, fundation) {
 
   // If redis is defined, use it for our sessions
   var redisConfig = _.get(config, 'redis');
-  if (redisConfig !== undefined) {
+  if (redisConfig !== undefined && redis.ready === true) {
     var RedisStore = require('connect-redis')(session);
-    var client = redis.createClient({
-      host: redisConfig.host,
-      port: redisConfig.port,
-    });
     sessionOptions = _.merge(sessionOptions, {
       store: new RedisStore({
-        host: redisConfig.host,
-        port: redisConfig.port,
-        client: client,
+        client: redis,
         logErrors: true
       })
     });
