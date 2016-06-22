@@ -1,7 +1,7 @@
 'use strict';
 
 var debug          = require('debug')('fundation');
-var debugPassport  = require('debug')('fundation:passport');
+var debugAuth      = require('debug')('fundation:auth');
 var _              = require("lodash");
 var redis          = require("redis");
 var passport       = require("passport");

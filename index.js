@@ -36,6 +36,7 @@ Fundation.prototype.init = function (options) {
     var promises = [];
     promises.push(require('./lib/mysql.js')(parent));
     promises.push(require('./lib/mongodb.js')(parent));
+    promises.push(require('./lib/redis.js')(parent));
     promises.push(require('./lib/memcached.js')(parent));
 
     // Once the DB connections are connected
@@ -50,6 +51,7 @@ Fundation.prototype.init = function (options) {
       require('./middleware/authentication.js')(parent, self);
       require('./middleware/middleware.js')(parent);
       require('./middleware/views.js')(parent);
+      require('./middleware/health.js')(parent);
       require('./middleware/controllers.js')(parent);
 
       console.log("Fundation: started");
