@@ -87,6 +87,15 @@ module.exports = function(app) {
     var selfArguments = arguments;
     selfArguments[1] = _.merge({},this.req.commonLocals, selfArguments[1]);
 
+    // If the argument is a promise
+    if ( typeof selfArguments[0].then === 'function' ) {
+      selfArguments[0]
+      .then(function (results) {
+        self._json(results);
+      });
+    }
+
+    // If the argument is an object of promises
     waitForPromises(selfArguments[0])
     .then(function(locals){
       self._json.apply( self, selfArguments );
