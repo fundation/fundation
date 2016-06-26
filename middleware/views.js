@@ -87,15 +87,6 @@ module.exports = function(app) {
     var selfArguments = arguments;
     selfArguments[1] = _.merge({},this.req.commonLocals, selfArguments[1]);
 
-    // If the argument is a promise
-    if ( typeof selfArguments[0].then === 'function' ) {
-      selfArguments[0]
-      .then(function (results) {
-        self._json(results);
-      });
-    }
-
-    // If the argument is an object of promises
     waitForPromises(selfArguments[0])
     .then(function(locals){
       self._json.apply( self, selfArguments );
@@ -110,9 +101,18 @@ module.exports = function(app) {
     var keys = [];
     var promises = [];
     for (var key in locals) {
+      // Look one level deep
       if ( locals[key] && typeof locals[key].then === 'function' ) {
         keys.push(key);
         promises.push(locals[key]);
+      }
+      // Attempt to look down one more level
+      // Want to make this recursive in the future
+      for (var subkey in locals[key]) {
+        if ( locals[key][subkey] && typeof locals[key][subkey].then === 'function' ) {
+          keys.push(key + '.' + subkey);
+          promises.push(locals[key][subkey]);
+        }
       }
     }
 
@@ -121,7 +121,7 @@ module.exports = function(app) {
       Promise.all(promises)
       .then(function (results) {
         for ( var i=0; i<results.length; i++ ) {
-          locals[keys[i]] = results[i];
+          _.set(locals, keys[i], results[i]);
         }
         resolve(locals);
       }, function (error){
