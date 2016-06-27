@@ -82,10 +82,18 @@ module.exports = function(app) {
     });
   };
 
-  response.json = function( ) {
+  response.json = function() {
     var self = this;
     var selfArguments = arguments;
     selfArguments[1] = _.merge({},this.req.commonLocals, selfArguments[1]);
+
+    // If the argument is a promise
+    if ( typeof selfArguments[0].then === 'function' ) {
+      selfArguments[0]
+      .then(function (results) {
+        self._json(results);
+      });
+    }
 
     waitForPromises(selfArguments[0])
     .then(function(locals){
