@@ -8,6 +8,8 @@ var path = require('path');
 var swig = require('swig');
 var util = require('util');
 var _ = require('lodash');
+var async = require('asyncawait/async');
+var await = require('asyncawait/await');
 
 /**
  * Views
@@ -126,15 +128,18 @@ module.exports = function(app) {
 
     // Wait for the promises to finish
     return new Promise(function(resolve, reject) {
-      Promise.all(promises)
-      .then(function (results) {
-        for ( var i=0; i<results.length; i++ ) {
-          _.set(locals, keys[i], results[i]);
+      async (function() {
+        for ( var i=0; i<promises.length; i++ ) {
+          try {
+            var temp = await (promises[i]);
+            _.set(locals, keys[i], temp);
+          } catch(error) {
+            console.error("waitForPromises:", error);
+          }
         }
+
         resolve(locals);
-      }, function (error){
-        reject(error);
-      });
+      })();
     });
   }
 
