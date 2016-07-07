@@ -135,6 +135,7 @@ module.exports = function(app) {
             _.set(locals, keys[i], temp);
           } catch(error) {
             console.error("waitForPromises:", error);
+            reject(error);
           }
         }
 
