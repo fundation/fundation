@@ -3,6 +3,7 @@
 var debug          = require('debug')('fundation');
 var debugRoutes    = require('debug')('fundation:statics');
 var browserify     = require('browserify');
+var compression    = require('compression');
 var lessMiddleware = require('less-middleware');
 var express        = require('express');
 var favicon        = require('serve-favicon');
@@ -12,6 +13,15 @@ var fs             = require('fs');
 module.exports = function(app) {
 
   debug("Setting up CSS and JS");
+
+  //
+  // Compress all requests
+  // Adds the following to the "Response Headers"
+  //   Content-Encoding: gzip
+  //   Transfer-Encoding: chunked
+  //   Vary: Accept-Encoding
+  //
+  app.use(compression());
 
   var b = browserify();
 

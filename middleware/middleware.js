@@ -2,7 +2,6 @@
 
 var debug          = require('debug')('fundation');
 var debugMiddleware = require('debug')('fundation:middleware');
-var compression    = require('compression');
 var cookieParser   = require('cookie-parser');
 var bodyParser     = require('body-parser');
 var glob           = require("glob");
@@ -11,15 +10,6 @@ var path           = require('path');
 module.exports = function(app) {
 
   debug("Setting up Middleware");
-
-  //
-  // Compress all requests
-  // Adds the following to the "Response Headers"
-  //   Content-Encoding: gzip
-  //   Transfer-Encoding: chunked
-  //   Vary: Accept-Encoding
-  //
-  app.use(compression());
 
   //
   // Parse data that is submitted from a <form>
