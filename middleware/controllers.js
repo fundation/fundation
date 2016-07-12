@@ -11,7 +11,7 @@ var path           = require('path');
  * @param {Application} app
  * @api private
  */
-module.exports = function(app) {
+module.exports = function(app, fundation) {
 
   debug("Setting up Controllers");
 
@@ -46,6 +46,10 @@ module.exports = function(app) {
 
     // 404 for pages not in the routes
     app.use(function (req, res, next) {
+
+      var error = fundation.model["404"];
+      var locals = error && typeof error.locals === 'function' ? error.locals() : {};
+
       res.status(404);
       res.render('404.swig');
     });

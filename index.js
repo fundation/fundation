@@ -52,7 +52,7 @@ Fundation.prototype.init = function (options) {
       require('./middleware/middleware.js')(parent);
       require('./middleware/views.js')(parent);
       require('./middleware/health.js')(parent);
-      require('./middleware/controllers.js')(parent);
+      require('./middleware/controllers.js')(parent, self);
 
       console.log("Fundation: started");
     });
