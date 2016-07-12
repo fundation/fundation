@@ -51,7 +51,7 @@ module.exports = function(app, fundation) {
       var locals = error && typeof error.locals === 'function' ? error.locals() : {};
 
       res.status(404);
-      res.render('404.swig');
+      res.render('404.swig', locals);
     });
 
     // http://expressjs.com/starter/faq.html#how-do-you-setup-an-error-handler
