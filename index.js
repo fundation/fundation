@@ -57,8 +57,6 @@ Fundation.prototype.init = function (options, plugins) {
       console.log("Fundation: started");
     });
 
-
-
   });
 
   return app;

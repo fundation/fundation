@@ -2,8 +2,6 @@
 
 var debug          = require('debug')('fundation');
 var debugPlugins    = require('debug')('fundation:plugins');
-var glob           = require("glob");
-var path           = require('path');
 
 module.exports = function(app, plugins, fundation) {
 
