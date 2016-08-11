@@ -47,13 +47,13 @@ Fundation.prototype.init = function (options, plugins) {
       require('./middleware/logging.js')(parent);
       require('./middleware/statics.js')(parent);
       require('./middleware/basic-auth.js')(parent);
+      require('./middleware/plugins.js')(parent, plugins, self);
       require('./middleware/models.js')(parent, self);
       require('./middleware/authentication.js')(parent, self);
       require('./middleware/middleware.js')(parent);
       require('./middleware/views.js')(parent);
       require('./middleware/health.js')(parent);
       require('./middleware/controllers.js')(parent, self);
-      require('./middleware/plugins.js')(parent, plugins, self);
       console.log("Fundation: started");
     });
 
