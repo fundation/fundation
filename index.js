@@ -14,9 +14,12 @@ function Fundation () {
   // Container for all of the models
   this.model = {};
 
+  // Container for all of the plugins
+  this.plugins = {};
+
 }
 
-Fundation.prototype.init = function (options) {
+Fundation.prototype.init = function (options, plugins) {
 
   debug('Starting Fundation: ' + app.get('env'));
 
@@ -53,9 +56,11 @@ Fundation.prototype.init = function (options) {
       require('./middleware/views.js')(parent);
       require('./middleware/health.js')(parent);
       require('./middleware/controllers.js')(parent, self);
-
+      require('./middleware/plugins.js')(parent, plugins, self);
       console.log("Fundation: started");
     });
+
+
 
   });
 
