@@ -14,9 +14,6 @@ function Fundation () {
   // Container for all of the models
   this.model = {};
 
-  // Container for all of the plugins
-  this.plugins = {};
-
 }
 
 Fundation.prototype.init = function (options, plugins) {
