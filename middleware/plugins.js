@@ -7,11 +7,13 @@ module.exports = function(app, plugins, fundation) {
 
   debug("Setting up Plugins");
 
-  plugins.forEach(function (plugin) {
-    if( typeof plugin === 'function' ) {
-      debugPlugins('Plugin: ' + plugin.name);
-      app.use(plugin(fundation));
-    }
-  });
+  if ( plugins ) {
+    plugins.forEach(function (plugin) {
+      if( typeof plugin === 'function' ) {
+        debugPlugins('Plugin: ' + plugin.name);
+        app.use(plugin(fundation));
+      }
+    });
+  }
 
 };

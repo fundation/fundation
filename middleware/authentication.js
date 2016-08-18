@@ -5,7 +5,6 @@ var debugAuth      = require('debug')('fundation:auth');
 var _              = require("lodash");
 var passport       = require("passport");
 var session        = require('express-session');
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
 
 module.exports = function(app, fundation) {
 
@@ -77,10 +76,32 @@ module.exports = function(app, fundation) {
 
     debug("  Authentication: Google");
 
+    var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
     passport.use(new GoogleStrategy({
       clientID: google.clientID,
       clientSecret: google.clientSecret,
       callbackURL: google.callbackURL
+    },
+    function(token, refreshToken, profile, done) {
+      return done(null, {
+        token: token,
+        refreshToken: refreshToken,
+        profile: profile
+      });
+    }));
+  }
+
+  // Facebook Authentication
+  var facebook = _.get(config, 'facebook.auth');
+  if (facebook !== undefined) {
+
+    debug("  Authentication: Facebook");
+
+    var FacebookStrategy = require('passport-facebook').Strategy;
+    passport.use(new FacebookStrategy({
+      clientID: facebook.appID,
+      clientSecret: facebook.appSecret,
+      callbackURL: facebook.callbackURL
     },
     function(token, refreshToken, profile, done) {
       return done(null, {
