@@ -167,10 +167,14 @@ module.exports = function(app) {
       var outputHTML = swig.renderFile(app.get('views') + '/layouts/' + locals.layout, locals);
 
       // Auto minify the HTML
-      outputHTML = minify(outputHTML, {
-        removeComments: true,
-        collapseWhitespace: true
-      });
+      try {
+        outputHTML = minify(outputHTML, {
+          removeComments: true,
+          collapseWhitespace: true
+        });
+      } catch (e) {
+        console.log(e);
+      }
 
       // Render the layout page and insert the HTML
       // Along with the new locals that is inherited
