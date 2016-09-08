@@ -18,10 +18,6 @@ module.exports = function(app, fundation) {
   //
   // Remove the x-powered-by
   //
-  app.use(function (req, res, next) {
-    res.header("X-powered-by", "Fundation, the fun way to go!");
-    next();
-  });
 
   //
   // Enable case sensitivity
