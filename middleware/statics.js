@@ -13,7 +13,8 @@ var fs             = require('fs');
 module.exports = function(app) {
 
   debug("Setting up CSS and JS");
-
+  var config = app.get('config').cache;
+  var cacheTime =  config.staticTime || 300; //time to cache in seconds
   //
   // Compress all requests
   // Adds the following to the "Response Headers"
@@ -66,7 +67,7 @@ module.exports = function(app) {
   }
 
   app.use('/ui/js/common.js', function(req, res, next){
-    res.setHeader('Cache-Control', 'public, max-age=300');
+    res.setHeader('Cache-Control', 'public, max-age='+cacheTime);
     res.setHeader('Content-Type', 'text/javascript');
     b.bundle(function(error, buffer){
       // Send the browerified results first
@@ -118,7 +119,7 @@ module.exports = function(app) {
   // Make it trivial to serve static files
   // http://expressjs.com/guide/using-middleware.html#express.static
   //
-  app.use(express.static(path.join('./public'), { maxAge: '5m' }));
+  app.use(express.static(path.join('./public'), { maxAge: cacheTime*1000 }));
 
   //
   // Load the favicon
