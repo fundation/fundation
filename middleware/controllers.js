@@ -16,10 +16,6 @@ module.exports = function(app, fundation) {
   debug("Setting up Controllers");
 
   //
-  // Remove the x-powered-by
-  //
-
-  //
   // Enable case sensitivity
   // "/Foo" and "/foo" will be treated as seperate routes
   //
