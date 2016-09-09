@@ -16,14 +16,6 @@ module.exports = function(app, fundation) {
   debug("Setting up Controllers");
 
   //
-  // Remove the x-powered-by
-  //
-  app.use(function (req, res, next) {
-    res.header("X-powered-by", "Fundation, the fun way to go!");
-    next();
-  });
-
-  //
   // Enable case sensitivity
   // "/Foo" and "/foo" will be treated as seperate routes
   //
