@@ -69,6 +69,7 @@ module.exports = function(app) {
   app.use('/ui/js/common.js', function(req, res, next){
     res.setHeader('Cache-Control', 'public, max-age='+cacheTime);
     res.setHeader('Content-Type', 'text/javascript');
+    b.exclude('request');
     b.bundle(function(error, buffer){
       // Send the browerified results first
       if (buffer) {
