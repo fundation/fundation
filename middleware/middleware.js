@@ -20,6 +20,11 @@ module.exports = function(app) {
     extended: true // For parsing application/x-www-form-urlencoded
   }));
 
+  app.use(function(req, res, next){
+    res.locals.currentURL = req.url;
+    next();
+  });
+
   //
   // Support for cookies
   //
