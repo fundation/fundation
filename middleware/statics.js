@@ -9,12 +9,13 @@ var express        = require('express');
 var favicon        = require('serve-favicon');
 var path           = require('path');
 var fs             = require('fs');
+var _              = require('lodash');
 
 module.exports = function(app) {
 
   debug("Setting up CSS and JS");
   var config = app.get('config').cache;
-  var cacheTime =  config.staticTime || 300; //time to cache in seconds
+  var cacheTime = _.get(config, 'staticTime', 300); //time to cache in seconds
   //
   // Compress all requests
   // Adds the following to the "Response Headers"
@@ -46,10 +47,11 @@ module.exports = function(app) {
           if (fs.existsSync(path.resolve('./node_modules/' + combined.browserify[i]))) {
             debug("  Browserifying: " + combined.browserify[i]);
             b.require(combined.browserify[i]);
-          } else if (fs.existsSync(path.resolve('./public/ui/js/' + combined.files[i]))) {
-            debug("  Browserifying: " + combined.files[i]);
-            b.require(path.resolve('./public/ui/js/' + combined.files[i]), {
-              expose: combined.files[i]
+          } else if (fs.existsSync(path.resolve('./public/ui/js/' + combined.browserify[i]))) {
+            debug("  Browserifying: " + combined.browserify[i]);
+            var p = path.parse(combined.browserify[i]);
+            b.require(path.resolve('./public/ui/js/' + combined.browserify[i]), {
+              expose: p.dir + '/' +  p.name
             });
           } else {
             // Todo: Add better error handling when an invalid modules is supplied.

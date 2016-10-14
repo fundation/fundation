@@ -17,7 +17,7 @@ var await = require('asyncawait/await');
  * @param {Application} app
  * @api private
  */
-module.exports = function(app) {
+module.exports = function(app, fundation) {
 
   debug("Setting up Views");
 

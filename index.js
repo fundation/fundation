@@ -54,7 +54,8 @@ Fundation.prototype.init = function (options, plugins) {
       require('./middleware/preload.js')(parent, self);
       require('./middleware/authentication.js')(parent, self);
       require('./middleware/middleware.js')(parent);
-      require('./middleware/views.js')(parent);
+      require('./middleware/vue.js')(parent, self);
+      require('./middleware/views.js')(parent, self);
       require('./middleware/health.js')(parent);
       require('./middleware/controllers.js')(parent, self);
       console.log("Fundation: started");
