@@ -29,6 +29,9 @@ module.exports = function(app, fundation) {
 
   // Read the routes folder
   glob("controllers/*.js", function (error, files) {
+    // Add the plugin routes
+    files = files.concat(fundation.plugins.controllers);
+
     // Add all of the routes
     files.forEach(function (routePath) {
       // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
@@ -38,7 +41,6 @@ module.exports = function(app, fundation) {
 
     // 404 for pages not in the routes
     app.use(function (req, res, next) {
-
       var error = fundation.model["404"];
       var locals = error && typeof error.locals === 'function' ? error.locals() : {};
 

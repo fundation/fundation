@@ -25,7 +25,7 @@ module.exports = function(app, fundation) {
   // Set the "views" folder to containe our views
   //
   app.set('view engine', 'html');
-  app.set('views', path.join('./views'));
+  app.set('views', ['views'].concat(fundation.plugins.views));
 
   //
   // Disable cache on dev
@@ -164,7 +164,7 @@ module.exports = function(app, fundation) {
 
       locals.html = html;
 
-      var outputHTML = swig.renderFile(app.get('views') + '/layouts/' + locals.layout, locals);
+      var outputHTML = swig.renderFile('views/layouts/' + locals.layout, locals);
 
       // Auto minify the HTML
       try {

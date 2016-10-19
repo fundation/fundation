@@ -11,7 +11,7 @@ var path           = require('path');
 var fs             = require('fs');
 var _              = require('lodash');
 
-module.exports = function(app) {
+module.exports = function(app, fundation) {
 
   debug("Setting up CSS and JS");
   var config = app.get('config').cache;
@@ -104,6 +104,22 @@ module.exports = function(app) {
           less = less + preprocess;
         } catch(error) { }
         return less + src;
+      },
+      path: function (lessPath, req) {
+        // Check the plugins for *.less files
+        for ( var i=0; i<fundation.plugins.ui.length; i++ ) {
+          var pluginLessPath = fundation.plugins.ui[i] + '/less/' + lessPath.replace('public/ui/less/', '');
+          if ( fs.existsSync(pluginLessPath) ) {
+            return pluginLessPath;
+          }
+        }
+
+        // Else use the default less location
+        return lessPath;
+      },
+      importPaths: function (lessPath, req) {
+        // Make sure @imports work in plugins
+        return './public/ui/less/';
       }
     }
   };

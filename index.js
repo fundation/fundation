@@ -48,7 +48,7 @@ Fundation.prototype.init = function (plugins) {
       // Middleware
       require('./middleware/logging.js')(parent);
       require('./middleware/plugins.js')(parent, plugins, self);
-      require('./middleware/statics.js')(parent);
+      require('./middleware/statics.js')(parent, self);
       require('./middleware/basic-auth.js')(parent);
       require('./middleware/models.js')(parent, self);
       require('./middleware/preload.js')(parent, self);
