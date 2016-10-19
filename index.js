@@ -18,7 +18,7 @@ function Fundation () {
 
 }
 
-Fundation.prototype.init = function (options, plugins) {
+Fundation.prototype.init = function (plugins) {
 
   debug('Starting Fundation: ' + app.get('env'));
 
@@ -32,7 +32,7 @@ Fundation.prototype.init = function (options, plugins) {
     parent.fundationRoot = __dirname;
 
     // Config
-    require('./lib/config.js')(parent, options);
+    require('./lib/config.js')(parent);
 
     // Database / Storage
     var promises = [];
@@ -47,9 +47,9 @@ Fundation.prototype.init = function (options, plugins) {
     .then(async (function(){
       // Middleware
       require('./middleware/logging.js')(parent);
+      require('./middleware/plugins.js')(parent, plugins, self);
       require('./middleware/statics.js')(parent);
       require('./middleware/basic-auth.js')(parent);
-      require('./middleware/plugins.js')(parent, plugins, self);
       require('./middleware/models.js')(parent, self);
       require('./middleware/preload.js')(parent, self);
       require('./middleware/authentication.js')(parent, self);

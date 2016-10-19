@@ -1,7 +1,7 @@
 'use strict';
 
-var debug          = require('debug')('fundation');
-var debugPlugins    = require('debug')('fundation:plugins');
+var debug = require('debug')('fundation');
+var debugPlugins = require('debug')('fundation:plugins');
 
 module.exports = function(app, plugins, fundation) {
 
@@ -9,10 +9,7 @@ module.exports = function(app, plugins, fundation) {
 
   if ( plugins ) {
     plugins.forEach(function (plugin) {
-      if( typeof plugin === 'function' ) {
-        debugPlugins('Plugin: ' + plugin.name);
-        app.use(plugin(fundation));
-      }
+      debugPlugins('Plugin: ' + plugin.name);
     });
   }
 
