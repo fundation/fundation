@@ -36,7 +36,7 @@ module.exports = function(app, fundation) {
     files.forEach(function (routePath) {
       // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
       debugRoutes("Route: " + routePath);
-      require(path.resolve(routePath))(app);
+      require(path.resolve(routePath))(app, fundation);
     });
 
     // 404 for pages not in the routes

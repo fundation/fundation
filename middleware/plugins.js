@@ -10,16 +10,20 @@ module.exports = function(app, plugins, fundation) {
   fundation.plugins = {
     controllers: [],
     views: [],
-    ui: []
+    ui: [],
+    tags: [],
+    filters: [],
+    models: []
   };
 
   if ( plugins ) {
     plugins.forEach(function (plugin) {
       debugPlugins('Plugin: ' + plugin.name);
 
-      fundation.plugins.controllers = fundation.plugins.controllers.concat(plugin.controllers);
-      fundation.plugins.views = fundation.plugins.views.concat(plugin.views);
-      fundation.plugins.ui = fundation.plugins.ui.concat(plugin.ui);
+      var keys = Object.keys(fundation.plugins);
+      for ( var i=0; i<keys.length; i++ ) {
+        fundation.plugins[keys[i]] = fundation.plugins[keys[i]].concat(plugin[keys[i]]);
+      }
     });
   }
 
