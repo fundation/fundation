@@ -10,6 +10,10 @@ module.exports = function(app, fundation) {
   debug("Setting up Models");
 
   var files = glob.sync('models/*.js');
+
+  // Add the plugin models
+  files = files.concat(fundation.plugins.models);
+
   files.forEach(function (file) {
     var modelName = path.basename(file, '.js');
     var model = require(path.resolve(file));
