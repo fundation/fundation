@@ -107,8 +107,8 @@ module.exports = function(app, fundation) {
       },
       path: function (lessPath, req) {
         // Check the plugins for *.less files
-        for ( var i=0; i<fundation.plugins.ui.length; i++ ) {
-          var pluginLessPath = fundation.plugins.ui[i] + '/less/' + lessPath.replace('public/ui/less/', '');
+        for ( var i=0; i<fundation.plugins.public.length; i++ ) {
+          var pluginLessPath = fundation.plugins.public[i] + '/ui/less/' + lessPath.replace('public/ui/less/', '');
           if ( fs.existsSync(pluginLessPath) ) {
             return pluginLessPath;
           }
@@ -139,6 +139,11 @@ module.exports = function(app, fundation) {
   // http://expressjs.com/guide/using-middleware.html#express.static
   //
   app.use(express.static(path.join('./public'), { maxAge: cacheTime*1000 }));
+
+  // Ability to extend the public folder from the plugins
+  for( var i=0; i<fundation.plugins.public.length; i++ ) {
+    app.use(express.static(path.join(fundation.plugins.public[i]), { maxAge: cacheTime*1000 }));
+  }
 
   //
   // Load the favicon

@@ -10,7 +10,7 @@ module.exports = function(app, plugins, fundation) {
   fundation.plugins = {
     controllers: [],
     views: [],
-    ui: [],
+    public: [],
     tags: [],
     filters: [],
     models: []
