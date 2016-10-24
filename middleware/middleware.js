@@ -7,7 +7,7 @@ var bodyParser     = require('body-parser');
 var glob           = require("glob");
 var path           = require('path');
 
-module.exports = function(app) {
+module.exports = function(app, fundation) {
 
   debug("Setting up Middleware");
 
@@ -31,6 +31,10 @@ module.exports = function(app) {
   app.use(cookieParser());
 
   var files = glob.sync('middleware/*.js');
+
+  // Add the plugin middlewares
+  files = files.concat(fundation.plugins.middleware);
+
   files.forEach(function (file) {
     debugMiddleware('Middleware: ' + file);
     require(path.resolve(file))(app);
