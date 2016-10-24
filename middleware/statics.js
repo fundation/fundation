@@ -31,38 +31,55 @@ module.exports = function(app, fundation) {
   // Mashed and compressed JS files!
   //
   var files_combined = [];
-  var jsCombinedPath = path.resolve('./public/ui/js/common.js');
 
-  // Make sure that the file "/public/ui/js/common.js" exists
-  if (fs.existsSync(jsCombinedPath)) {
-    // Get the contents of the file
-    var combined = require(jsCombinedPath);
+  // collect all common.js files from site and plugins
+  var commonFiles = [];
+  commonFiles.push(path.resolve('./public/ui/js/common.js'));
 
-    // Make sure that its a module that was returned
-    if (combined) {
-      // Todo: Rewrite the code below because it can look cleaner
-      // Go through each element that needs to be browserify'ed
-      if ( combined.browserify ) {
-        for (var i=0; i<combined.browserify.length; i++) {
-          if (fs.existsSync(path.resolve('./node_modules/' + combined.browserify[i]))) {
-            debug("  Browserifying: " + combined.browserify[i]);
-            b.require(combined.browserify[i]);
-          } else if (fs.existsSync(path.resolve('./public/ui/js/' + combined.browserify[i]))) {
-            debug("  Browserifying: " + combined.browserify[i]);
-            var p = path.parse(combined.browserify[i]);
-            b.require(path.resolve('./public/ui/js/' + combined.browserify[i]), {
-              expose: p.dir + '/' +  p.name
-            });
-          } else {
-            // Todo: Add better error handling when an invalid modules is supplied.
+  // append all plugins and make path to common.js
+  for (var i=0; i<fundation.plugins.public.length; i++) {
+    commonFiles.push(fundation.plugins.public[i] + '/ui/js/common.js');
+  }
+
+  for (var j=0; j<commonFiles.length; j++) {
+    var jsCombinedPath = commonFiles[j];
+
+    // Make sure that the common.js file exists
+    if (fs.existsSync(jsCombinedPath)) {
+
+      // Get the contents of the file
+      var combined = require(jsCombinedPath);
+
+      // Make sure that its a module that was returned
+      if (combined) {
+
+        // Todo: Rewrite the code below because it can look cleaner
+        // Go through each element that needs to be browserify'ed
+        if (combined.browserify) {
+          for (var i=0; i<combined.browserify.length; i++) {
+            if (fs.existsSync(path.resolve('./node_modules/' + combined.browserify[i]))) {
+              debug("  Browserifying: " + combined.browserify[i]);
+              b.require(combined.browserify[i]);
+            } else if (fs.existsSync(path.resolve('./public/ui/js/' + combined.browserify[i]))) {
+              debug("  Browserifying: " + combined.browserify[i]);
+              var p = path.parse(combined.browserify[i]);
+              b.require(path.resolve('./public/ui/js/' + combined.browserify[i]), {
+                expose: p.dir + '/' +  p.name
+              });
+            } else {
+              // Todo: Add better error handling when an invalid modules is supplied.
+            }
           }
         }
-      }
-      // Get all of the user defined JavaScript files
-      if ( combined.files ) {
-        for (var i=0; i<combined.files.length; i++) {
-          debug("  Mashing: " + combined.files[i]);
-          files_combined.push(path.resolve('./public/ui/js/' + combined.files[i]));
+
+        // Get all of the user/module defined JavaScript files
+        if (combined.files) {
+          var jsDirectory = path.dirname(jsCombinedPath);
+
+          for (var i=0; i<combined.files.length; i++) {
+            debug("  Mashing: " + combined.files[i]);
+            files_combined.push(jsDirectory + '/' + combined.files[i]);
+          }
         }
       }
     }
