@@ -53,7 +53,7 @@ Fundation.prototype.init = function (plugins) {
       require('./middleware/models.js')(parent, self);
       require('./middleware/preload.js')(parent, self);
       require('./middleware/authentication.js')(parent, self);
-      require('./middleware/middleware.js')(parent);
+      require('./middleware/middleware.js')(parent, self);
       require('./middleware/vue.js')(parent, self);
       require('./middleware/views.js')(parent, self);
       require('./middleware/health.js')(parent);
