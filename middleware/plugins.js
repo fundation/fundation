@@ -15,7 +15,9 @@ module.exports = function(app, plugins, fundation) {
     filters: [],
     models: [],
     middleware: [],
-    preload: []
+    preload: [],
+    tags: [],
+    filters: []
   };
 
   if ( plugins ) {

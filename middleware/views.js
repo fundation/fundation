@@ -40,6 +40,8 @@ module.exports = function(app, fundation) {
   //
   var tags = {};
   glob("tags/*.js", function (error, files) {
+    // Add the plugin tags
+    files = files.concat(fundation.plugins.tags);
     files.forEach(function(routePath) {
       var tagName = path.basename(routePath, '.js');
       tags[tagName] = require(path.resolve(routePath))(app);
@@ -51,6 +53,8 @@ module.exports = function(app, fundation) {
   // Include custom filters
   //
   glob("filters/*.js", function (error, files) {
+    // Add the plugin filters
+    files = files.concat(fundation.plugins.filters);
     files.forEach(function(routePath) {
       var filterName = path.basename(routePath, '.js');
       var filter = require(path.resolve(routePath));
