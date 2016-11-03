@@ -2,7 +2,9 @@
 
 var debug          = require('debug')('fundation');
 var debugRoutes    = require('debug')('fundation:statics');
+var babel          = require('babel-core');
 var browserify     = require('browserify');
+var vueify         = require('vueify');
 var compression    = require('compression');
 var lessMiddleware = require('less-middleware');
 var express        = require('express');
@@ -86,23 +88,81 @@ module.exports = function(app, fundation) {
     }
   }
 
+  var cachedJS = {};
+
   app.use('/ui/js/common.js', function(req, res, next){
     res.setHeader('Cache-Control', 'public, max-age='+cacheTime);
     res.setHeader('Content-Type', 'text/javascript');
-    b.exclude('request');
-    b.bundle(function(error, buffer){
-      // Send the browerified results first
-      if (buffer) {
-        res.write(buffer + ';');
-      }
-      // Now send all of the user defined JavaScript
-      files_combined.forEach(function (path, k) {
-        var contents = fs.readFileSync(path);
-        res.write(contents + ';');
-      });
+
+    // Using memory cache in production
+    // app.get('env') !== 'development' &&
+    if ( cachedJS['common.js'] ) {
+      res.write(cachedJS['common.js'] + ';');
       res.end();
-    });
+    } else {
+      b.exclude('request');
+      b.transform(vueify);
+      b.transform("babelify", { presets: ["es2015"] });
+      b.bundle(function(error, buffer){
+        cachedJS['common.js'] = '';
+
+        // Send the browerified results first
+        if (buffer) {
+          cachedJS['common.js'] += buffer.toString('utf-8');
+        }
+
+        // Now send all of the user defined JavaScript
+        files_combined.forEach(function (path, k) {
+          cachedJS['common.js'] += babel.transformFileSync(path, { presets: ["es2015"] }).code;
+        });
+
+        res.write(cachedJS['common.js'] + ';');
+        res.end();
+      });
+    }
   });
+
+  // Browserify individual JS files
+  app.use('*.js', function(req, res, next){
+    if ( cachedJS[req.baseUrl] ) {
+      res.write(cachedJS[req.baseUrl] + ';');
+      res.end();
+    } else {
+      cachedJS[req.baseUrl] = '';
+      var file_path = 'public' + req.baseUrl;
+      if (fs.existsSync(file_path)) {
+        cachedJS[req.baseUrl] = babel.transformFileSync(file_path, { presets: ["es2015"] }).code;
+
+        res.write(cachedJS[req.baseUrl] + ';');
+        return res.end();
+      }
+
+      next();
+    }
+  });
+
+  // Browserify individual JS files
+  // app.use('*.vue', function(req, res, next){
+
+  //   var file_path = 'public' + req.baseUrl;
+  //   if (fs.existsSync(file_path)) {
+
+  //     browserify(file_path)
+  //     .transform(vueify)
+  //     .bundle(function(error, buffer){
+  //       if ( error ) {
+  //         console.log(error);
+  //         next(404);
+  //       } else {
+  //         console.log("I did it")
+  //         res.write(buffer.toString('utf-8') + ';');
+  //         return res.end();
+  //       }
+  //     })
+  //   } else {
+  //     next(404);
+  //   }
+  // });
 
   //
   // Parse our CSS files automatically with LESS

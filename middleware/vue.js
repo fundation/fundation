@@ -14,16 +14,15 @@ module.exports = function(app, fundation) {
 
   debug("Setting up Vue");
 
-  glob.sync('components/*.vue')
-  .forEach(function (file) {
-    var componentName = path.basename(file, '.vue');
-    browserify(file)
-    .transform(vueify)
-    .bundle()
-    .pipe(fs.createWriteStream('./public/ui/js/vue/' + componentName + '.js'));
+  // glob.sync('components/*.vue')
+  // .forEach(function (file) {
+  //   var componentName = path.basename(file, '.vue');
+  //   browserify(file)
+  //   .transform(vueify)
+  //   .bundle()
+  //   .pipe(fs.createWriteStream('./public/ui/js/vue/' + componentName + '.js'));
 
-    debugVue('Vue: ' + componentName);
-  });
-
+  //   debugVue('Vue: ' + componentName);
+  // });
 
 };
