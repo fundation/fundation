@@ -8,6 +8,9 @@
     "type": "git",
     "url": "https://github.com/fundation/fundation"
   },
+  "publishConfig": {
+    "tag": "0.x"
+  },
   "engines": {
     "node": ">= 4.4.0"
   },
