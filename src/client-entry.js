@@ -1,5 +1,6 @@
 import 'es6-promise/auto'
 import { app, store } from './app'
+import css from '../../../public/less/global.less'
 
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.

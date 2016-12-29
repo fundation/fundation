@@ -47,6 +47,13 @@ module.exports = {
           limit: 10000,
           name: '[name].[ext]?[hash]'
         }
+      },
+      { test: /\.less$/,
+        use: [
+          'style-loader',
+          { loader: 'css-loader', options: { importLoaders: 1 } },
+          'less-loader'
+        ]
       }
     ]
   }
