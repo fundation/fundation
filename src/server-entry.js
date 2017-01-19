@@ -20,29 +20,17 @@ export default context => {
     return Promise.reject({ code: '404' })
   }
 
+  const meta = app.$meta()
+
   // Call preFetch hooks on components matched by the route.
   // A preFetch hook dispatches a store action and returns a Promise,
   // which is resolved when the action is complete and store state has been
   // updated.
   return Promise.all(matchedComponents.map(component => {
-
-
-
-
-
-    store.state.frog = 'Default Frog'
-    if ( component.head ) {
-      store.state.frog = component.head().title
-    } 
-
-
-
-
     if (component.preFetch) {
       return component.preFetch(store)
     }
   })).then(() => {
-    isDev && console.log(`data pre-fetch: ${Date.now() - s}ms`)
     // After all preFetch hooks are resolved, our store is now
     // filled with the state needed to render the app.
     // Expose the state on the render context, and let the request handler
@@ -51,19 +39,7 @@ export default context => {
     // the initial data fetching on the client.
     context.initialState = store.state
 
-
-   //  console.log("")
-   //  console.log("")
-   //  console.log("do I end up here every time")
-   //  console.log("")
-   //  console.log(util.inspect(context, { showHidden: true, depth: null }))
-   //  console.log("------------------------")
-   //  console.log("")
-   // //  console.log(component);
-   //  console.log("*************************")
-   //  console.log("")
-   //  console.log("")
-
+    context.meta = meta
 
     return app
   })

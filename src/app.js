@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from '../../../App.vue'
 import store from '../../../store'
 import router from '../../../router'
+import meta from 'vue-meta'
 import { sync } from 'vuex-router-sync'
 import * as filters from '../../../filters'
 
@@ -21,6 +22,8 @@ const app = new Vue(Vue.util.extend({
   router,
   store
 }, App))
+
+Vue.use(meta)
 
 // expose the app, the router and the store.
 // note we are not mounting the app here, since bootstrapping will be

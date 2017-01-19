@@ -55,13 +55,7 @@ module.exports = function fundation (options) {
     }
 
     function parseIndex (template) {
-      const contentMarker = '<!-- APP -->'
-      const i = template.indexOf(contentMarker)
-
-      return {
-        head: template.slice(0, i),
-        tail: template.slice(i + contentMarker.length)
-      }
+      return template.split('<!-- SLICE -->');
     }
 
     const serve = (path, cache) => express.static(resolve(path), {
@@ -86,7 +80,21 @@ module.exports = function fundation (options) {
       const renderStream = renderer.renderToStream(context)
 
       renderStream.once('data', () => {
-        res.write(indexHTML.head)
+
+        const {
+          title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
+        } = context.meta.inject()
+
+        res.write(indexHTML[0])
+
+        res.write(meta.text())
+        res.write(title.text())
+        res.write(link.text())
+        res.write(style.text())
+        res.write(script.text())
+        res.write(noscript.text())
+
+        res.write(indexHTML[1])
       })
 
       renderStream.on('data', chunk => {
@@ -102,18 +110,20 @@ module.exports = function fundation (options) {
             }</script>`
           )
         }
-        res.end(indexHTML.tail)
-        console.log(`whole request: ${Date.now() - s}ms`)
+        res.end(indexHTML[2])
+
+        console.log(`${req.method} ${req.url} 200 ${Date.now() - s} ms`)
       })
 
       renderStream.on('error', err => {
         if (err && err.code === '404') {
           res.status(404).end('404 | Page Not Found')
+          console.log(`${req.method} ${req.url} 404 ${Date.now() - s} ms`)
           return
         }
         // Render Error Page or Redirect
         res.status(500).end('Internal Error 500')
-        console.error(`error during render : ${req.url}`)
+        console.log(`${req.method} ${req.url} 500 ${Date.now() - s} ms`)
         console.error(err)
       })
 
