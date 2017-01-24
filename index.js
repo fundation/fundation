@@ -85,6 +85,8 @@ module.exports = function fundation (options) {
           title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
         } = context.meta.inject()
 
+        res.status(context.initialState.code)
+
         res.write(indexHTML[0])
 
         res.write(meta.text())
