@@ -29,18 +29,25 @@ const config = Object.assign({}, base, {
 })
 
 if (process.env.NODE_ENV === 'production') {
+  vueConfig.loaders = {
+    less: ExtractTextPlugin.extract({
+      loader: 'css-loader!less-loader',
+      fallbackLoader: 'vue-style-loader' // <- this is a dep of vue-loader
+    })
+  }
+
   config.plugins.push(
     new ExtractTextPlugin('styles.[hash].css'),
     // this is needed in webpack 2 for minifying CSS
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    }),
-    // minify JS
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
     })
+    // minify JS [does not support es6]
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false
+    //   }
+    // })
   )
 }
 
