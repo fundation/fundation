@@ -15,13 +15,13 @@ module.exports = {
   },
   performance: false, // Remove this in the future
   output: {
-    path: path.resolve(__dirname, '../dist'),
+    path: path.resolve(__dirname, '../../../dist'),
     publicPath: '/dist/',
     filename: '[name].[hash].js'
   },
   resolve: { // no clue what this actually does yet
     alias: {
-      'public': path.resolve(__dirname, '../public')
+      'public': path.resolve(__dirname, '../../../public')
     }
   },
   module: {
