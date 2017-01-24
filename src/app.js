@@ -5,6 +5,11 @@ import router from '../../../router'
 import meta from 'vue-meta'
 import { sync } from 'vuex-router-sync'
 import * as filters from '../../../filters'
+import axios from 'axios'
+
+// https://medium.com/the-vue-point/retiring-vue-resource-871a82880af4#.w5c4snp5p
+// access this.$http like in vue-resource
+Vue.prototype.$http = axios
 
 // sync the router with the vuex store.
 // this registers `store.state.route`
