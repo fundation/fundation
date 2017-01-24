@@ -1,6 +1,7 @@
 'use strict';
 const isProd = process.env.NODE_ENV === 'production'
 
+const _ = require('lodash')
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
@@ -85,7 +86,7 @@ module.exports = function fundation (options) {
           title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
         } = context.meta.inject()
 
-        res.status(context.initialState.code)
+        res.status(_.get(context, 'initialState.code', 200))
 
         res.write(indexHTML[0])
 
