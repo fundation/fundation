@@ -29,8 +29,8 @@ module.exports = function fundation (options) {
     let renderer  // created from the webpack-generated server bundle
     if (isProd) {
       // in production: create server renderer and index HTML from real fs
-      renderer = createRenderer(fs.readFileSync(resolve('./dist/server-bundle.js'), 'utf-8'))
-      indexHTML = parseIndex(fs.readFileSync(resolve('./dist/index.html'), 'utf-8'))
+      renderer = createRenderer(fs.readFileSync(resolve('../../dist/server-bundle.js'), 'utf-8'))
+      indexHTML = parseIndex(fs.readFileSync(resolve('../../dist/index.html'), 'utf-8'))
     } else {
       // in development: setup the dev server with watch and hot-reload,
       // and update renderer / index HTML on file change.
@@ -84,6 +84,8 @@ module.exports = function fundation (options) {
         const {
           title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
         } = context.meta.inject()
+
+        res.status(context.initialState.code)
 
         res.write(indexHTML[0])
 
