@@ -4,6 +4,8 @@ var debug          = require('debug')('fundation');
 var debugRoutes    = require('debug')('fundation:controllers');
 var glob           = require("glob");
 var path           = require('path');
+var async          = require('asyncawait/async');
+var await          = require('asyncawait/await');
 
 /**
  * Routes
@@ -28,7 +30,7 @@ module.exports = function(app, fundation) {
   app.set('strict routing', true);
 
   // Read the routes folder
-  glob("controllers/*.js", function (error, files) {
+  glob("controllers/*.js", async (function (error, files) {
     // Add the plugin routes
     files = files.concat(fundation.plugins.controllers);
 
@@ -36,7 +38,7 @@ module.exports = function(app, fundation) {
     files.forEach(function (routePath) {
       // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
       debugRoutes("Route: " + routePath);
-      require(path.resolve(routePath))(app, fundation);
+      await (require(path.resolve(routePath))(app, fundation));
     });
 
     // 404 for pages not in the routes
@@ -71,6 +73,6 @@ module.exports = function(app, fundation) {
       }
     });
 
-  });
+  }));
 
 };
