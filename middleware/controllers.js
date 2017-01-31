@@ -1,11 +1,12 @@
 'use strict';
 
-var debug          = require('debug')('fundation');
-var debugRoutes    = require('debug')('fundation:controllers');
-var glob           = require("glob");
-var path           = require('path');
 var async          = require('asyncawait/async');
 var await          = require('asyncawait/await');
+var debug          = require('debug')('fundation');
+var debugRoutes    = require('debug')('fundation:controllers');
+var fs             = require('fs');
+var glob           = require("glob");
+var path           = require('path');
 
 /**
  * Routes
@@ -16,6 +17,17 @@ var await          = require('asyncawait/await');
 module.exports = function(app, fundation) {
 
   debug("Setting up Controllers");
+
+  /**
+   * registerHook
+   *
+   * @param  {string} file name of file to register
+   */
+  var registerHook = function(file) {
+    if ( fs.existsSync(path.resolve('controllers/' + file + '.js')) ) {
+      require(path.resolve('controllers/' + file + '.js'))(app, fundation);
+    }
+  }
 
   //
   // Enable case sensitivity
@@ -34,12 +46,21 @@ module.exports = function(app, fundation) {
     // Add the plugin routes
     files = files.concat(fundation.plugins.controllers);
 
+    // load before
+    registerHook('before');
+
     // Add all of the routes
     files.forEach(function (routePath) {
+      if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
+        return;
+      }
       // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
       debugRoutes("Route: " + routePath);
       await (require(path.resolve(routePath))(app, fundation));
     });
+
+    // load after
+    registerHook('after');
 
     // 404 for pages not in the routes
     app.use(function (req, res, next) {
