@@ -25,7 +25,7 @@ module.exports = function(app, fundation) {
    */
   var registerHook = function(file) {
     if ( fs.existsSync(path.resolve('controllers/' + file + '.js')) ) {
-      await (require(path.resolve('controllers/' + file + '.js'))(app, fundation));
+      require(path.resolve('controllers/' + file + '.js'))(app, fundation);
     }
   }
 
