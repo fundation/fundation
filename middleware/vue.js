@@ -20,11 +20,11 @@ module.exports = function(app, fundation) {
 
   return new Promise(function(resolve, reject) {
 
-    let renderer  // created from the webpack-generated server bundle
     if (isProdOrStage) {
       // in production: create server renderer and index HTML from real fs
-      app.renderer = createRenderer(fs.readFileSync(resolve('../../../dist/server-bundle.js'), 'utf-8'))
-      app.baseHTML = parseIndex(fs.readFileSync(resolve('../../../dist/index.html'), 'utf-8'))
+      app.renderer = createRenderer(fs.readFileSync(path.resolve(__dirname, '../../../dist/server-bundle.js'), 'utf-8'))
+      app.baseHTML = parseIndex(fs.readFileSync(path.resolve(__dirname, '../../../dist/index.html'), 'utf-8'))
+      resolve(true);
     } else {
       // in development: setup the dev server with watch and hot-reload,
       // and update renderer / index HTML on file change.
