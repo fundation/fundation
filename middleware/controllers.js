@@ -9,6 +9,7 @@ const fs = require('fs')
 const glob = require("glob")
 const path = require('path')
 const serialize = require('serialize-javascript')
+const moment = require('moment')
 
 /**
  * Routes
@@ -91,7 +92,10 @@ module.exports = function(app, fundation) {
           }</script>`
         )
       }
-      res.end(app.baseHTML[2])
+
+      const currentDate = `<!-- ${moment().hours()}:${moment().minutes()}:${moment().seconds()} ${moment().month() + 1}/${moment().date()}/${moment().year()} -->`
+
+      res.end(`${app.baseHTML[2]}\n${currentDate}`)
 
       console.log(`${req.method} ${req.url} 200 ${Date.now() - s} ms`)
     })
