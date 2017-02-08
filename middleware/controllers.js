@@ -93,7 +93,7 @@ module.exports = function(app, fundation) {
         )
       }
 
-      const currentDate = `<!-- ${moment().hours()}:${moment().minutes()}:${moment().seconds()} ${moment().month() + 1}/${moment().date()}/${moment().year()} -->`
+      const currentDate = `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} -->`
 
       res.end(`${app.baseHTML[2]}\n${currentDate}`)
 
