@@ -1,6 +1,6 @@
 {
   "name": "fundation",
-  "version": "1.0.0-alpha.12",
+  "version": "1.0.0-alpha.13",
   "author": "Alexander Chan <fundation@nonstopcoder.com>",
   "description": "Fun and simple way to build a site",
   "license": "MIT",
@@ -51,7 +51,8 @@
     "buble": "0.15.2",
     "buble-loader": "0.4.0",
     "style-loader": "0.13.1",
-    "url-loader": "0.5.7"
+    "url-loader": "0.5.7",
+    "moment": "2.17.1"
   },
   "devDependencies": {
   },
