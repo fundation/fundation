@@ -13,7 +13,6 @@ module.exports = {
       'vuex-router-sync'
     ]
   },
-  performance: false, // Remove this in the future
   output: {
     path: path.resolve(__dirname, '../../../dist'),
     publicPath: '/dist/',

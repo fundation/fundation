@@ -9,6 +9,12 @@ const isDev = process.env.NODE_ENV !== 'production'
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
 export default context => {
+
+  // Put the cookies in the store
+  if (context.cookies) {
+    store.state.cookies = context.cookies
+  }
+
   const s = isDev && Date.now()
 
   // set router's location
@@ -27,8 +33,9 @@ export default context => {
   // which is resolved when the action is complete and store state has been
   // updated.
   return Promise.all(matchedComponents.map(component => {
+    // Prefetch only applies to first time load
     if (component.preFetch) {
-      return component.preFetch(store)
+      return component.preFetch(store, app)
     }
   })).then(() => {
     // After all preFetch hooks are resolved, our store is now

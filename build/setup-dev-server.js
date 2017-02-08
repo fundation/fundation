@@ -13,26 +13,25 @@ module.exports = function setupDevServer (app, opts) {
     // new webpack.NoErrorsPlugin()
   )
 
-  // dev middleware
+  // Dev middleware
   const clientCompiler = webpack(clientConfig)
   const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
-    publicPath: clientConfig.output.publicPath,
-    stats: {
-      colors: true,
-      chunks: false
-    }
+    noInfo: true, publicPath: clientConfig.output.publicPath,
   })
   app.use(devMiddleware)
+
   clientCompiler.plugin('done', () => {
     const filePath = path.join(clientConfig.output.path, 'index.html')
     const index = devMiddleware.fileSystem.readFileSync(filePath, 'utf-8')
     opts.indexUpdated(index)
   })
 
-  // hot middleware
-  app.use(require('webpack-hot-middleware')(clientCompiler))
+  // Hot middleware
+  app.use(require('webpack-hot-middleware')(clientCompiler, {
+    log: false // Hides webpack built <hash> in 2868ms
+  }))
 
-  // watch and update server renderer
+  // Watch and update server renderer
   const serverCompiler = webpack(serverConfig)
   const mfs = new MFS()
   const outputPath = path.join(serverConfig.output.path, serverConfig.output.filename)

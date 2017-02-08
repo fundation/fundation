@@ -6,6 +6,7 @@ import meta from 'vue-meta'
 import { sync } from 'vuex-router-sync'
 import * as filters from '../../../filters'
 import axios from 'axios'
+import cookie from 'vue-cookie'
 
 // https://medium.com/the-vue-point/retiring-vue-resource-871a82880af4#.w5c4snp5p
 // access this.$http like in vue-resource
@@ -28,7 +29,10 @@ const app = new Vue(Vue.util.extend({
   store
 }, App))
 
+// https://github.com/declandewet/vue-meta
 Vue.use(meta)
+
+Vue.use(cookie)
 
 // expose the app, the router and the store.
 // note we are not mounting the app here, since bootstrapping will be
