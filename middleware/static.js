@@ -27,6 +27,6 @@ module.exports = function(app, fundation) {
   app.use('/dist', serve('../../../dist'))
 
   // Service static assets
-  app.use('/public', serve('../../../public'))
+  app.use('/', serve('../../../public'))
 
 }
