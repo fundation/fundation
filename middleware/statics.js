@@ -13,6 +13,7 @@ var path           = require('path');
 var util           = require('util');
 var fs             = require('fs');
 var _              = require('lodash');
+var uglify         = require('uglify-js')
 
 module.exports = function(app, fundation) {
 
@@ -29,6 +30,11 @@ module.exports = function(app, fundation) {
   app.use(compression());
 
   var b = browserify();
+
+  // minify pre.js and inline it
+  if (fs.existsSync(path.resolve('./public/ui/js/pre.js'))) {
+    app.locals.preJS = uglify.minify(path.resolve('./public/ui/js/pre.js')).code;
+  }
 
   //
   // Mashed and compressed JS files!
@@ -116,6 +122,9 @@ module.exports = function(app, fundation) {
           cachedJS['common.js'] += babel.transformFileSync(path, { presets: ["es2015"] }).code;
         });
 
+        // overwrite it with uglify!
+        cachedJS['common.js'] = uglify.minify(cachedJS['common.js'], {fromString: true}).code
+
         res.write(cachedJS['common.js'] + ';');
         res.end();
       });
@@ -131,7 +140,7 @@ module.exports = function(app, fundation) {
       cachedJS[req.baseUrl] = '';
       var file_path = 'public' + req.baseUrl;
       if (fs.existsSync(file_path)) {
-        cachedJS[req.baseUrl] = babel.transformFileSync(file_path, { presets: ["es2015"] }).code;
+        cachedJS[req.baseUrl] = uglify.minify(babel.transformFileSync(file_path, { presets: ["es2015"] }).code, {fromString: true}).code;
 
         res.write(cachedJS[req.baseUrl] + ';');
         return res.end();
