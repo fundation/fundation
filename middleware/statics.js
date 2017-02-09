@@ -31,11 +31,6 @@ module.exports = function(app, fundation) {
 
   var b = browserify();
 
-  // minify pre.js and inline it
-  if (fs.existsSync(path.resolve('./public/ui/js/pre.js'))) {
-    app.locals.preJS = uglify.minify(path.resolve('./public/ui/js/pre.js')).code;
-  }
-
   //
   // Mashed and compressed JS files!
   //
