@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import Vue from 'vue'
 import App from '../../../App.vue'
 import store from '../../../store'
@@ -5,7 +6,9 @@ import router from '../../../router'
 import meta from 'vue-meta'
 import { sync } from 'vuex-router-sync'
 import * as filters from '../../../filters'
+import * as plugins from '../../../plugins'
 import axios from 'axios'
+import config from '../../../config/config'
 import cookie from 'vue-cookie'
 
 // https://medium.com/the-vue-point/retiring-vue-resource-871a82880af4#.w5c4snp5p
@@ -29,10 +32,11 @@ const app = new Vue(Vue.util.extend({
   store
 }, App))
 
-// https://github.com/declandewet/vue-meta
-Vue.use(meta)
-
-Vue.use(cookie)
+// load plugins
+Object.keys(plugins).forEach(key => {
+  let pluginConfig = _.get(config, 'plugins.' + key, {})
+  Vue.use(plugins[key], pluginConfig)
+})
 
 // expose the app, the router and the store.
 // note we are not mounting the app here, since bootstrapping will be
