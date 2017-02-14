@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import { app, router, store } from './app'
 const util = require('util');
 
@@ -48,6 +49,18 @@ export default context => {
 
     context.meta = meta
 
+    return app
+  })
+  .catch(error => {
+    if (_.get(error, 'code') === '301' && _.get(error, 'url', false)) {
+      return Promise.reject({
+        code: _.get(error, 'code'),
+        url:  _.get(error, 'url')
+      })
+    }
+
+    context.initialState = store.state
+    context.meta = meta
     return app
   })
 }

@@ -97,16 +97,21 @@ module.exports = function(app, fundation) {
 
       res.end(`${app.baseHTML[2]}\n${currentDate}`)
 
-      console.log(`${req.method} ${req.url} 200 ${Date.now() - s} ms`)
+      console.log(`${req.method} ${req.url} ${_.get(context, 'initialState.code', 200)} ${Date.now() - s} ms`)
     })
 
     renderStream.on('error', err => {
+      // the vue app should handle all 404's
       if (err && err.code === '404') {
         res.status(404).end('404 | Page Not Found')
         console.log(`${req.method} ${req.url} 404 ${Date.now() - s} ms`)
         return
+      } else if (err && err.code === '301') {
+        // handle 301 redirects
+        res.redirect(301, err.url)
+        return
       }
-      // Render Error Page or Redirect
+      // Render Error Page
       res.status(500).end('Internal Error 500')
       console.log(`${req.method} ${req.url} 500 ${Date.now() - s} ms`)
       console.error(err)
