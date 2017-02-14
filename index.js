@@ -30,6 +30,9 @@ module.exports = function fundation (options) {
       await(require('./middleware/vue.js')(parent, self))
       require('./middleware/middleware.js')(parent, self)
       require('./middleware/controllers.js')(parent, self)
+
+      console.log('Fundation Ready!')
+      console.log('')
     })();
 
   });
