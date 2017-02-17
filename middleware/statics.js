@@ -286,6 +286,7 @@ module.exports = function(app, fundation) {
     } else {
       getCommonJS(browserify)
       .then(function(response) {
+        cached['/ui/js/common.js'] = response;
         res.write(cached['/ui/js/common.js'] + ';')
         res.end();
       })
