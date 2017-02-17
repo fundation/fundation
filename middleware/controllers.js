@@ -17,7 +17,7 @@ const moment = require('moment')
  * @param {Application} app
  * @api private
  */
-module.exports = function(app, fundation) {
+module.exports = async (function(app, fundation) {
 
   debug("Setting up Controllers");
 
@@ -36,17 +36,17 @@ module.exports = function(app, fundation) {
   //
   // Add routes to express
   //
-  glob("controllers/*.js", async (function (error, files) {
+  await (glob("controllers/*.js", function (error, files) {
 
     // Add all of the routes
-    files.forEach(function (routePath) {
+    files.forEach(async (function (routePath) {
       if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
         return;
       }
       // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
       debugRoutes("Route: " + routePath);
       await (require(path.resolve(routePath))(app, fundation));
-    });
+    }));
 
   }));
 
@@ -119,4 +119,4 @@ module.exports = function(app, fundation) {
 
   });
 
-};
+});
