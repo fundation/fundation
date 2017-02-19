@@ -255,12 +255,6 @@ module.exports = function(app, fundation) {
         compress: true
       }
 
-      if (app.get('env') !== 'production') {
-        lessOption.sourceMap = {
-          sourceMapFileInline: true
-        };
-      }
-
       try {
         compiledCss = await (less.render(getLessDependencies('', undefined) + commonLess, lessOption))
       } catch (err) {
@@ -349,82 +343,7 @@ module.exports = function(app, fundation) {
     // debug: true,
     dest: path.join('./public/ui/css'),
     preprocess: {
-      less: function(src, req) {
-        var originalUrl = _.get(req, 'originalUrl', '');
-        var less = '';
-        var siteRoot = process.cwd();
-
-        // import variables and mixins every time, regardless of the file requested
-        var lessFilenames = [
-          'variables',
-          'mixins'
-        ];
-
-        lessFilenames.forEach(function (filename) {
-
-          // load all the plugin files if they exist
-          fundation.plugins.public.forEach(function (pluginPublicPath) {
-            var pluginFile = pluginPublicPath + '/ui/less/' + filename + '.less';
-
-            if (fs.existsSync(pluginFile)) {
-              less += fs.readFileSync(pluginFile);
-            }
-          });
-
-          // load the site file if it exists
-          var siteFile = siteRoot + '/public/ui/less/' + filename + '.less';
-
-          if (fs.existsSync(siteFile)) {
-            less += fs.readFileSync(siteFile);
-          }
-        });
-
-        if (originalUrl == '/ui/css/common.css') {
-
-          // load all commmon files following stage precedence
-          var lessFilenames = [
-            'common.stage1',
-            'common.stage2',
-            'common.stage3',
-            'common'
-          ];
-
-          lessFilenames.forEach(function (filename) {
-
-            // load all the plugin files if they exist
-            fundation.plugins.public.forEach(function (pluginPublicPath) {
-              var pluginFile = pluginPublicPath + '/ui/less/' + filename + '.less';
-
-              if (fs.existsSync(pluginFile)) {
-                less += fs.readFileSync(pluginFile);
-              }
-            });
-
-            // load the site file if it exists unless the filename is 'common'
-            // because it is added in the return statement via 'src'
-            var siteFile = siteRoot + '/public/ui/less/' + filename + '.less';
-
-            if (fs.existsSync(siteFile) && filename != 'common') {
-              less += fs.readFileSync(siteFile);
-            }
-          });
-
-        } else {
-
-          // load a specific css file (ie: /ui/css/pages/about.css)
-          fundation.plugins.public.forEach(function (pluginPublicPath) {
-            var lessPath = (pluginPublicPath + originalUrl)
-              .replace('.css', '.less')
-              .replace('/css/', '/less/');
-
-            if (fs.existsSync(lessPath)) {
-              less += fs.readFileSync(lessPath);
-            }
-          });
-        }
-
-        return less + src;
-      }
+      less: getLessDependencies
     }
   };
 
