@@ -3,6 +3,7 @@ const base = require('./webpack.base.config')
 const vueConfig = require('./vue-loader.config')
 const HTMLPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 
 const config = Object.assign({}, base, {
   // resolve: {
@@ -24,6 +25,9 @@ const config = Object.assign({}, base, {
     // generate output HTML
     new HTMLPlugin({
       template: __dirname + '/../src/index.template.html'
+    }),
+    new ScriptExtHtmlWebpackPlugin({
+      defaultAttribute: 'async'
     })
   ])
 })
