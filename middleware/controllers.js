@@ -65,7 +65,7 @@ module.exports = async (function(app, fundation) {
         title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
       } = context.meta.inject()
 
-      res.status(_.get(context, 'initialState.code', 200))
+      res.status(_.get(context, 'initialState.statusCode', 200))
 
       res.write(app.baseHTML[0])
 
