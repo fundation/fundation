@@ -16,6 +16,10 @@ export default context => {
     store.state.cookies = context.cookies
   }
 
+  if (context.config) {
+    store.state.config = context.config
+  }
+
   const s = isDev && Date.now()
 
   // set router's location

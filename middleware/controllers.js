@@ -56,7 +56,7 @@ module.exports = async (function(app, fundation) {
   app.get('*', (req, res) => {
     res.setHeader("Content-Type", "text/html");
     var s = Date.now()
-    const context = { url: req.url, cookies: req.cookies }
+    const context = { url: req.url, cookies: req.cookies, config: app.get('config') }
     const renderStream = app.renderer.renderToStream(context)
 
     renderStream.once('data', () => {
