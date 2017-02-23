@@ -15,9 +15,10 @@ module.exports = function(app, fundation) {
   // Parse data that is submitted from a <form>
   // console.log(__dirname + '/../uploads');
   //
-  app.use(bodyParser.json()); // For parsing application/json
+  app.use(bodyParser.json({ limit: '100mb' })); // For parsing application/json
   app.use(bodyParser.urlencoded({
-    extended: true // For parsing application/x-www-form-urlencoded
+    extended: true, // For parsing application/x-www-form-urlencoded
+    limit: '100mb'
   }));
 
   app.use(function(req, res, next){
