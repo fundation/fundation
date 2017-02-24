@@ -37,7 +37,7 @@ if (process.env.NODE_ENV === 'production') {
   }
 
   config.plugins.push(
-    new ExtractTextPlugin('styles.[hash].css'),
+    new ExtractTextPlugin('styles.css?v=[hash]'),
     // this is needed in webpack 2 for minifying CSS
     new webpack.LoaderOptionsPlugin({
       minimize: true
