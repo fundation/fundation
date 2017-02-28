@@ -152,6 +152,7 @@ module.exports = function(app, fundation) {
   // Setup master layout
   //
   app.engine('swig', function ( pathName, locals, callback ) {
+
     // Render the template first
     swig.renderFile( pathName, locals, function ( error, html ) {
 
@@ -169,6 +170,12 @@ module.exports = function(app, fundation) {
       locals.html = html;
 
       var outputHTML = swig.renderFile('views/layouts/' + locals.layout, locals);
+
+      // append hash key to static assets
+      _.forEach(app.get('hashed'), function(value, key) {
+        var regex = new RegExp(key, 'g')
+        outputHTML = outputHTML.replace(regex, key +'?v=' + value)
+      });
 
       // Auto minify the HTML
       try {
