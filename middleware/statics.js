@@ -2,7 +2,6 @@
 
 var debug          = require('debug')('fundation');
 var debugRoutes    = require('debug')('fundation:statics');
-var async          = require('asyncawait/async');
 var await          = require('asyncawait/await');
 var babel          = require('babel-core');
 var Browserify     = require('browserify');
@@ -215,7 +214,7 @@ module.exports = function(app, fundation) {
     // cached normal js files
 
     // loops through each file in public/ui/js and puts it into cached and hashed map
-    glob(path.resolve('./public/ui/js') + '/*.js', async (function (error, files) {
+    glob(path.resolve('./public/ui/js') + '/*.js', function (error, files) {
       files.forEach(function (file_path) {
         if (fs.existsSync(file_path)) {
 
@@ -232,10 +231,12 @@ module.exports = function(app, fundation) {
           hashed[url] = checksum(cached[url])
         }
       })
-    }));
+    });
 
     try {
-    // compile common.js
+      // compile common.js
+
+      // await will wait from async in index.js line ~ 47
       cached['/ui/js/common.js'] = await ( getCommonJS(browserify) )
       hashed['/ui/js/common.js'] = checksum(cached['/ui/js/common.js'])
     } catch (err) {
