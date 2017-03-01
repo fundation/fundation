@@ -97,7 +97,7 @@ module.exports = async (function(app, fundation) {
 
       res.end(`${app.baseHTML[2]}\n${currentDate}`)
 
-      console.log(`${req.method} ${req.url} ${_.get(context, 'initialState.code', 200)} ${Date.now() - s} ms`)
+      console.log(`${req.method} ${req.url} ${_.get(context, 'initialState.statusCode', 200)} ${Date.now() - s} ms`)
     })
 
     renderStream.on('error', err => {
