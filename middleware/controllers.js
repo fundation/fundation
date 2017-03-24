@@ -7,6 +7,7 @@ var debugRoutes    = require('debug')('fundation:controllers');
 var fs             = require('fs');
 var glob           = require("glob");
 var path           = require('path');
+var express        = require('express');
 
 /**
  * Routes
@@ -39,7 +40,15 @@ module.exports = function(app, fundation) {
   // Enable strict routing,
   // "/foo" and "/foo/" will be treated as seperate routes
   //
-  app.set('strict routing', true);
+  app.set('strict routing', true); // This doesn't work you have to use express.Router
+
+  // Example: app.r.get('/test', function (req, res, next) {
+  app.r = express.Router({
+    strict: true,
+    caseSensitive: true
+  });
+
+  app.use(app.r);
 
   // Read the routes folder
   glob("controllers/*.js", async (function (error, files) {
