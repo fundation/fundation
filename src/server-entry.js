@@ -9,7 +9,7 @@ const isDev = process.env.NODE_ENV !== 'production'
 // state of our application before actually rendering it.
 // Since data fetching is async, this function is expected to
 // return a Promise that resolves to the app instance.
-export default context => {
+export default function serverEntry(context) {
 
   // Put the cookies in the store
   if (context.cookies) {
