@@ -27,7 +27,7 @@ module.exports = function fundation (options) {
 
     async (function(){
       require('./middleware/static.js')(parent, self)
-      await(require('./middleware/vue.js')(parent, self))
+      require('./middleware/vue.js')(parent, self)
       require('./middleware/middleware.js')(parent, self)
       require('./middleware/controllers.js')(parent, self)
 

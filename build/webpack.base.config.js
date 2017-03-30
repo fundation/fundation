@@ -1,12 +1,16 @@
 const path = require('path')
 const vueConfig = require('./vue-loader.config')
 
+const isProd = process.env.NODE_ENV === 'production'
+
 module.exports = {
-  devtool: '#source-map',
+  devtool: isProd
+    ? false
+    : '#cheap-module-eval-source-map',
   entry: {
     app: path.resolve(__dirname, '../src/client-entry.js'),
     vendor: [
-      'es6-promise',
+      'es6-promise/auto',
       'vue',
       'vue-router',
       'vuex',
@@ -25,7 +29,7 @@ module.exports = {
   },
   module: {
     noParse: /es6-promise\.js$/, // avoid webpack shimming process
-    loaders: [
+    rules: [
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -34,6 +38,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'buble-loader',
+        exclude: /node_modules/,
         options: {
           objectAssign: 'Object.assign'
         }

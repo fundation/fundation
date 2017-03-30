@@ -24,10 +24,11 @@ Object.keys(filters).forEach(key => {
 // create the app instance.
 // here we inject the router and store to all child components,
 // making them available everywhere as `this.$router` and `this.$store`.
-const app = new Vue(Vue.util.extend({
+const app = new Vue({
   router,
-  store
-}, App))
+  store,
+  render: h => h(App)
+})
 
 // https://github.com/declandewet/vue-meta
 Vue.use(meta)

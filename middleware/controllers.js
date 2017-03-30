@@ -10,6 +10,7 @@ const glob = require("glob")
 const path = require('path')
 const serialize = require('serialize-javascript')
 const moment = require('moment')
+var express = require('express')
 
 /**
  * Routes
@@ -27,17 +28,18 @@ module.exports = async (function(app, fundation) {
   //
   app.set('case sensitive routing', true);
 
-  //
-  // Enable strict routing,
-  // "/foo" and "/foo/" will be treated as seperate routes
-  //
-  app.set('strict routing', true);
+  // Example: app.r.get('/test', function (req, res, next) {
+  app.r = express.Router({
+    strict: true,
+    caseSensitive: true
+  });
+
+  app.use(app.r);
 
   //
   // Add routes to express
   //
   await (glob("controllers/*.js", function (error, files) {
-
     // Add all of the routes
     files.forEach(async (function (routePath) {
       if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
@@ -47,58 +49,24 @@ module.exports = async (function(app, fundation) {
       debugRoutes("Route: " + routePath);
       await (require(path.resolve(routePath))(app, fundation));
     }));
-
   }));
 
   //
   // Add in a route for Vue
   //
   app.get('*', (req, res) => {
-    res.setHeader("Content-Type", "text/html");
     var s = Date.now()
+
+    // When Vue isn't fully ready
+    if ( typeof app.renderer === 'undefined' ) {
+      return res.end('...');
+    }
+
     const context = { url: req.url, cookies: req.cookies, config: app.get('config') }
     const renderStream = app.renderer.renderToStream(context)
+    renderStream.setEncoding('utf8');
 
-    renderStream.once('data', () => {
-
-      const {
-        title, htmlAttrs, bodyAttrs, link, style, script, noscript, meta
-      } = context.meta.inject()
-
-      res.status(_.get(context, 'initialState.statusCode', 200))
-
-      res.write(app.baseHTML[0])
-
-      res.write(meta.text())
-      res.write(title.text())
-      res.write(link.text())
-      res.write(style.text())
-      res.write(script.text())
-      res.write(noscript.text())
-
-      res.write(app.baseHTML[1])
-    })
-
-    renderStream.on('data', chunk => {
-      res.write(chunk)
-    })
-
-    renderStream.on('end', () => {
-      // Embed initial store state
-      if (context.initialState) {
-        res.write(
-          `<script>window.__INITIAL_STATE__=${
-            serialize(context.initialState, { isJSON: true })
-          }</script>`
-        )
-      }
-
-      const currentDate = `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} -->`
-
-      res.end(`${app.baseHTML[2]}\n${currentDate}`)
-
-      console.log(`${req.method} ${req.url} ${_.get(context, 'initialState.statusCode', 200)} ${Date.now() - s} ms`)
-    })
+    let HTML = ''
 
     renderStream.on('error', err => {
       // the vue app should handle all 404's
@@ -117,6 +85,25 @@ module.exports = async (function(app, fundation) {
       console.error(err)
     })
 
+    // Build the HTML for the page
+    renderStream.on('data', chunk => {
+      HTML += chunk;
+    })
+
+    // Done with the HTML, add in vue-meta and a time stamp
+    renderStream.on('end', () => {
+      res.setHeader("Content-Type", "text/html");
+      res.status(_.get(context, 'initialState.statusCode', 200))
+
+      // Create a string for vue-meta
+      const m = context.meta.inject()
+      let HEAD = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
+
+      HTML = HTML.replace('<!--vue-meta-->', HEAD);
+      HTML = HTML.replace('</body>', `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} --></body>`);
+
+      res.end(HTML)
+    })
   });
 
 });
