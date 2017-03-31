@@ -1,4 +1,4 @@
-import 'es6-promise/auto'
+import 'es6-promise'
 import { app, store, router } from './app'
 
 // prime the store with server-initialized state.
