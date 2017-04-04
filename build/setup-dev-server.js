@@ -42,6 +42,8 @@ module.exports = function setupDevServer (app, cb) {
 
   // Hot middleware
   app.use(require('webpack-hot-middleware')(clientCompiler, {
+    noInfo: true,
+    quiet: true,
     log: false // Hides webpack built <hash> in 2868ms
   }))
 

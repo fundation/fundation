@@ -8,6 +8,11 @@ import * as filters from '../../../filters'
 import axios from 'axios'
 import cookie from 'vue-cookie'
 
+// http://element.eleme.io/#/en-US/component/i18n
+import ElementUI from 'element-ui'
+import locale from 'element-ui/lib/locale/lang/en'
+Vue.use(ElementUI, { locale })
+
 // https://medium.com/the-vue-point/retiring-vue-resource-871a82880af4#.w5c4snp5p
 // access this.$http like in vue-resource
 Vue.prototype.$http = axios
