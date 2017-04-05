@@ -15,8 +15,8 @@ module.exports = Object.assign({}, base, {
       'create-api': './create-api-server.js'
     }
   },
-  // externals: Object.keys(require('../package.json').dependencies),
-  externals: [ Object.keys(require(path.resolve(__dirname, '../../../package.json')).dependencies), { 'browser-request': true } ],
+  // externals: [ Object.keys(require(path.resolve(__dirname, '../../../package.json')).dependencies), { 'browser-request': true } ],
+  externals: [ { 'browser-request': true } ],
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
