@@ -58,7 +58,7 @@ export default context => {
 
         context.state = store.state
         context.meta = meta
-        reject(app)
+        resolve(app)
       })
     })
   })
