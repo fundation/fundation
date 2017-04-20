@@ -93,7 +93,7 @@ module.exports = async (function(app, fundation) {
     // Done with the HTML, add in vue-meta and a time stamp
     renderStream.on('end', () => {
       res.setHeader("Content-Type", "text/html");
-      res.status(_.get(context, 'initialState.statusCode', 200))
+      res.status(_.get(context, 'state.statusCode', 200))
 
       // Create a string for vue-meta
       const m = context.meta.inject()
