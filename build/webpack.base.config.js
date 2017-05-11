@@ -7,16 +7,6 @@ module.exports = {
   devtool: isProd
     ? false
     : '#cheap-module-eval-source-map',
-  // entry: {
-  //   app: path.resolve(__dirname, '../src/client-entry.js'),
-  //   vendor: [
-  //     'es6-promise',
-  //     'vue',
-  //     'vue-router',
-  //     'vuex',
-  //     'vuex-router-sync'
-  //   ]
-  // },
   output: {
     path: path.resolve(__dirname, '../../../dist'),
     publicPath: '/dist/',

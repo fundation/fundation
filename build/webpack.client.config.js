@@ -25,10 +25,6 @@ const config = merge(base, {
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor'
     }),
-    // generate output HTML
-    // new HTMLPlugin({
-    //   template: __dirname + '/../src/index.template.html'
-    // }),
     new VueSSRClientPlugin()
   ]
 })
