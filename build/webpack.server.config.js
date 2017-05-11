@@ -1,9 +1,47 @@
-const webpack = require('webpack')
-const base = require('./webpack.base.config')
-const VueSSRPlugin = require('vue-ssr-webpack-plugin')
 const path = require('path')
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const base = require('./webpack.base.config')
+const nodeExternals = require('webpack-node-externals')
+const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
 
-module.exports = Object.assign({}, base, {
+module.exports = merge(base, {
+  target: 'node',
+  devtool: '#source-map',
+  entry: path.resolve(__dirname, '../src/entry-server.js'),
+  output: {
+    filename: 'server-bundle.js',
+    libraryTarget: 'commonjs2'
+  },
+  resolve: {
+    alias: {
+      'create-api': './create-api-server.js'
+    }
+  },
+  // https://webpack.js.org/configuration/externals/#externals
+  // https://github.com/liady/webpack-node-externals
+  externals: nodeExternals({
+    // do not externalize CSS files in case we need to import it from a dep
+    whitelist: /\.css$/
+  }),
+  plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      'process.env.VUE_ENV': '"server"'
+    }),
+    new VueSSRServerPlugin()
+  ]
+})
+
+/*
+const path = require('path')
+const webpack = require('webpack')
+const merge = require('webpack-merge')
+const base = require('./webpack.base.config')
+const nodeExternals = require('webpack-node-externals')
+const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+
+module.exports = merge(base, {
   target: 'node',
   entry: path.resolve(__dirname, '../src/server-entry.js'),
   output: {
@@ -15,13 +53,20 @@ module.exports = Object.assign({}, base, {
       'create-api': './create-api-server.js'
     }
   },
+  // https://webpack.js.org/configuration/externals/#externals
+  // https://github.com/liady/webpack-node-externals
+  externals: nodeExternals({
+    // do not externalize CSS files in case we need to import it from a dep
+    whitelist: /\.css$/
+  }),
   // externals: [ Object.keys(require(path.resolve(__dirname, '../../../package.json')).dependencies), { 'browser-request': true } ],
-  externals: [ { 'browser-request': true } ],
+  // externals: [ { 'browser-request': true } ],
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
       'process.env.VUE_ENV': '"server"'
     }),
-    new VueSSRPlugin()
+    new VueSSRServerPlugin()
   ]
 })
+*/

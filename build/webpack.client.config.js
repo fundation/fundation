@@ -2,10 +2,13 @@ const webpack = require('webpack')
 const merge = require('webpack-merge')
 const base = require('./webpack.base.config')
 const vueConfig = require('./vue-loader.config')
-const HTMLPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
 const config = merge(base, {
+  entry: {
+    app: __dirname + '/../src/entry-client.js'
+  },
   resolve: {
     alias: {
       'create-api': './create-api-client.js'
@@ -23,9 +26,10 @@ const config = merge(base, {
       name: 'vendor'
     }),
     // generate output HTML
-    new HTMLPlugin({
-      template: __dirname + '/../src/index.template.html'
-    })
+    // new HTMLPlugin({
+    //   template: __dirname + '/../src/index.template.html'
+    // }),
+    new VueSSRClientPlugin()
   ]
 })
 
@@ -36,7 +40,6 @@ if (process.env.NODE_ENV === 'production') {
       fallback: 'vue-style-loader' // <- this is a dep of vue-loader
     })
   }
-
   config.plugins.push(
     // minify JS
     new webpack.optimize.UglifyJsPlugin({
