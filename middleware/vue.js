@@ -29,14 +29,14 @@ module.exports = function(app, fundation) {
       return createBundleRenderer(bundle, Object.assign(options, {
         template,
         // for component caching
-        cache: LRU({
-          max: 1000,
-          maxAge: 1000 * 60 * 15
-        }),
+        // cache: LRU({
+        //   max: 1000,
+        //   maxAge: 1000 * 60 * 15
+        // }),
         // this is only needed when vue-server-renderer is npm-linked
         basedir: resolve('./dist'),
         // recommended for performance
-        runInNewContext: false
+        runInNewContext: true
       }))
     }
 
