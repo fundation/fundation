@@ -11,7 +11,7 @@ import cookie from 'vue-cookie'
 
 // https://medium.com/the-vue-point/retiring-vue-resource-871a82880af4#.w5c4snp5p
 // access this.$http like in vue-resource
-Vue.prototype.$http = axios
+Vue.$http = axios
 
 // Sync the router with the vuex store.
 // This registers `store.state.route`
