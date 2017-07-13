@@ -34,27 +34,7 @@ module.exports = async (function(app, fundation) {
     caseSensitive: true
   });
 
-  app.use(app.r);
-
-  //
-  // Add routes to express
-  //
-  await (glob("controllers/*.js", function (error, files) {
-    // Add all of the routes
-    files.forEach(async (function (routePath) {
-      if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
-        return;
-      }
-      // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
-      debugRoutes("Route: " + routePath);
-      await (require(path.resolve(routePath))(app, fundation));
-    }));
-  }));
-
-  //
-  // Add in a route for Vue
-  //
-  app.get('*', (req, res) => {
+  function renderVue (req, res) {
     var s = Date.now()
 
     // When Vue isn't fully ready
@@ -62,7 +42,13 @@ module.exports = async (function(app, fundation) {
       return res.end('...');
     }
 
-    const context = { url: req.url, cookies: req.cookies, config: app.get('config') }
+    const context = {
+      post: req.body,
+      cookies: req.cookies,
+      config: app.get('config'),
+      url: req.url,
+     }
+
     const renderStream = app.renderer.renderToStream(context)
     renderStream.setEncoding('utf8');
 
@@ -72,7 +58,6 @@ module.exports = async (function(app, fundation) {
       // the vue app should handle all 404's
       if (err && err.code === '404') {
         res.status(404).end('404 | Page Not Found')
-        console.log(`${req.method} ${req.url} 404 ${Date.now() - s} ms`)
         return
       } else if (err && err.code === '301') {
         // handle 301 redirects
@@ -81,7 +66,7 @@ module.exports = async (function(app, fundation) {
       }
       // Render Error Page
       res.status(500).end('Internal Error 500')
-      console.log(`${req.method} ${req.url} 500 ${Date.now() - s} ms`)
+      logRequest(req.method, 500, req.url)
       console.error(err)
     })
 
@@ -104,6 +89,30 @@ module.exports = async (function(app, fundation) {
 
       res.end(HTML)
     })
-  });
+  }
+
+  app.renderVue = renderVue
+
+  app.use(app.r);
+
+  //
+  // Add routes to express
+  //
+  await (glob("controllers/*.js", function (error, files) {
+    // Add all of the routes
+    files.forEach(async (function (routePath) {
+      if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
+        return;
+      }
+      // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
+      debugRoutes("Route: " + routePath);
+      await (require(path.resolve(routePath))(app, fundation));
+    }));
+  }));
+
+  //
+  // Add in a route for Vue
+  //
+  app.get('*', renderVue)
 
 });

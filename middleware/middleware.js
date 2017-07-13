@@ -5,11 +5,18 @@ const debugMiddleware = require('debug')('fundation:middleware')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const glob = require("glob")
+const morgan = require('morgan')
 const path = require('path')
 
 module.exports = function(app, fundation) {
 
   debug("Setting up Middleware")
+
+  //
+  // Set up logging
+  //
+  const morgan_env = (app.get('env') === 'production') ? 'combined' : 'dev'
+  app.use(morgan(morgan_env))
 
   //
   // Parse data that is submitted from a <form>
