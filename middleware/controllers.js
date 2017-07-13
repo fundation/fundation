@@ -12,6 +12,10 @@ const serialize = require('serialize-javascript')
 const moment = require('moment')
 var express = require('express')
 
+function logRequest(method, code, url) {
+  console.log(`${method} ${code} ${new Date()} ${url}`)
+}
+
 /**
  * Routes
  *
@@ -58,16 +62,17 @@ module.exports = async (function(app, fundation) {
       // the vue app should handle all 404's
       if (err && err.code === '404') {
         res.status(404).end('404 | Page Not Found')
-        console.log(`${req.method} ${req.url} 404 ${Date.now() - s} ms`)
+        logRequest(req.method, 404, req.url)
         return
       } else if (err && err.code === '301') {
         // handle 301 redirects
         res.redirect(301, err.url)
+        logRequest(req.method, 301, req.url)
         return
       }
       // Render Error Page
       res.status(500).end('Internal Error 500')
-      console.log(`${req.method} ${req.url} 500 ${Date.now() - s} ms`)
+      logRequest(req.method, 500, req.url)
       console.error(err)
     })
 
@@ -88,8 +93,7 @@ module.exports = async (function(app, fundation) {
       HTML = HTML.replace('<!--vue-meta-->', HEAD);
       HTML = HTML.replace('</body>', `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} --></body>`);
 
-
-      console.log(`${req.method} ${res.statusCode} ${new Date()} ${req.url}`)
+      logRequest(req.method, res.statusCode, req.url)
 
       res.end(HTML)
     })
