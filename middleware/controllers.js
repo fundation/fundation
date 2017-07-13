@@ -34,27 +34,7 @@ module.exports = async (function(app, fundation) {
     caseSensitive: true
   });
 
-  app.use(app.r);
-
-  //
-  // Add routes to express
-  //
-  await (glob("controllers/*.js", function (error, files) {
-    // Add all of the routes
-    files.forEach(async (function (routePath) {
-      if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
-        return;
-      }
-      // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
-      debugRoutes("Route: " + routePath);
-      await (require(path.resolve(routePath))(app, fundation));
-    }));
-  }));
-
-  //
-  // Add in a route for Vue
-  //
-  app.get('*', (req, res) => {
+  function renderVue (req, res) {
     var s = Date.now()
 
     // When Vue isn't fully ready
@@ -62,7 +42,13 @@ module.exports = async (function(app, fundation) {
       return res.end('...');
     }
 
-    const context = { url: req.url, cookies: req.cookies, config: app.get('config') }
+    const context = {
+      post: req.body,
+      cookies: req.cookies,
+      config: app.get('config'),
+      url: req.url,
+     }
+
     const renderStream = app.renderer.renderToStream(context)
     renderStream.setEncoding('utf8');
 
@@ -102,8 +88,35 @@ module.exports = async (function(app, fundation) {
       HTML = HTML.replace('<!--vue-meta-->', HEAD);
       HTML = HTML.replace('</body>', `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} --></body>`);
 
+
+      console.log(`${req.method} ${res.statusCode} ${new Date()} ${req.url}`)
+
       res.end(HTML)
     })
-  });
+  }
+
+  app.renderVue = renderVue
+
+  app.use(app.r);
+
+  //
+  // Add routes to express
+  //
+  await (glob("controllers/*.js", function (error, files) {
+    // Add all of the routes
+    files.forEach(async (function (routePath) {
+      if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
+        return;
+      }
+      // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
+      debugRoutes("Route: " + routePath);
+      await (require(path.resolve(routePath))(app, fundation));
+    }));
+  }));
+
+  //
+  // Add in a route for Vue
+  //
+  app.get('*', renderVue)
 
 });

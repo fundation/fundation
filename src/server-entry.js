@@ -9,6 +9,12 @@ const isDev = process.env.NODE_ENV !== 'production'
 // return a Promise that resolves to the app instance.
 export default context => {
   return new Promise((resolve, reject) => {
+
+    // put the postbody in the store
+    if (context.post) {
+      store.state.post = context.post
+    }
+
     // Put the cookies in the store
     if (context.cookies) {
       store.state.cookies = context.cookies
