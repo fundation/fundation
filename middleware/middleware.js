@@ -6,10 +6,14 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const glob = require("glob")
 const path = require('path')
+const morgan = require('morgan')
 
 module.exports = function(app, fundation) {
 
   debug("Setting up Middleware")
+
+  const morgan_env = (app.get('env') === 'production') ? 'combined' : 'dev'
+  app.use(morgan(morgan_env))
 
   //
   // Parse data that is submitted from a <form>
