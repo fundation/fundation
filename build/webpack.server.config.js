@@ -16,7 +16,10 @@ module.exports = Object.assign({}, base, {
     }
   },
   // externals: [ Object.keys(require(path.resolve(__dirname, '../../../package.json')).dependencies), { 'browser-request': true } ],
-  externals: [ { 'browser-request': true } ],
+  externals: [{
+    'browser-request': true,
+    'newrelic': 'NewRelic'
+  }],
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
