@@ -38,11 +38,11 @@ if (process.env.NODE_ENV === 'production') {
   }
   config.plugins.push(
     // minify JS
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
-    }),
+    // new webpack.optimize.UglifyJsPlugin({
+    //   compress: {
+    //     warnings: false
+    //   }
+    // }),
     new ExtractTextPlugin('styles.css?v=[hash]'),
     // this is needed in webpack 2 for minifying CSS
     new webpack.LoaderOptionsPlugin({
