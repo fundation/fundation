@@ -21,8 +21,10 @@ module.exports = merge(base, {
   // https://webpack.js.org/configuration/externals/#externals
   // https://github.com/liady/webpack-node-externals
   externals: nodeExternals({
+    'newrelic': 'NewRelic',
     // do not externalize CSS files in case we need to import it from a dep
-    whitelist: /\.css$/
+    whitelist: /\.css$/,
+
   }),
   // externals: [ { 'browser-request': true } ],
   plugins: [
