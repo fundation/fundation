@@ -14,7 +14,10 @@ const config = merge(base, {
       'create-api': './create-api-client.js'
     }
   },
-  externals: [{ 'request': true }],
+  externals: [{
+    request: true,
+    newrelic: 'NewRelic'
+  }],
   plugins: [
     // strip dev-only code in Vue source
     new webpack.DefinePlugin({
