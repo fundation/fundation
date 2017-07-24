@@ -27,10 +27,8 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'buble-loader',
-        options: {
-          objectAssign: 'Object.assign'
-        }
+        loader: 'babel-loader',
+        exclude: /node_modules/
       },
       { test: /\.less$/,
         use: [
