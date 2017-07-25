@@ -99,6 +99,7 @@ module.exports = async (function(app, fundation) {
       const m = context.meta.inject()
       let HEAD = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
 
+      HEAD = HEAD.replace(/ data-vue-meta="true"/g, '')
       HTML = HTML.replace('<!--vue-meta-->', HEAD);
       HTML = HTML.replace('</body>', `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} --></body>`);
 

@@ -1,6 +1,6 @@
 {
   "name": "fundation",
-  "version": "1.0.4-vue2.4",
+  "version": "1.0.5-vue2.4",
   "author": "Alexander Chan <fundation@nonstopcoder.com>",
   "description": "Fun and simple way to build a site",
   "license": "MIT",
@@ -55,7 +55,7 @@
     "vue-template-compiler": "2.4.2",
     "vuex": "2.3.1",
     "vuex-router-sync": "4.2.0",
-    "webpack": "3.3.0",
+    "webpack": "3.4.0",
     "webpack-dev-middleware": "1.11.0",
     "webpack-hot-middleware": "2.18.2",
     "webpack-merge": "4.1.0",
