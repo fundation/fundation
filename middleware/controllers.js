@@ -66,7 +66,7 @@ module.exports = async (function(app, fundation) {
       }
       // Render Error Page
       res.status(500).end('Internal Error 500')
-      logRequest(req.method, 500, req.url)
+      // logRequest(req.method, 500, req.url)
       console.error(err)
     })
 
