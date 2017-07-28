@@ -46,7 +46,8 @@ export default context => {
         // inline the state in the HTML response. This allows the client-side
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
-        context.state = Buffer.from(JSON.stringify(store.state)).toString('base64')
+        // context.state = Buffer.from(JSON.stringify(store.state)).toString('base64')
+        context.state = store.state
         context.meta = meta
         resolve(app)
       }).catch(error => {
