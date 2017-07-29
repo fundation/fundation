@@ -13,7 +13,7 @@ const config = merge(base, {
   },
   externals: [{
     'request': true,
-    'newrelic': 'NewRelic'
+    'newrelic': 'newrelic'
   }],
   plugins: [
     // strip dev-only code in Vue source
