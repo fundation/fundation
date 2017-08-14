@@ -57,7 +57,7 @@ export default context => {
       }).catch(error => {
         if (_.get(error, 'type', '') === 'redirect') {
           return reject({
-            type: _.get(error, 'type', 'redirect')
+            type: _.get(error, 'type', 'redirect'),
             code: _.get(error, 'code', 301),
             url: _.get(error, 'url', ''),
           })
