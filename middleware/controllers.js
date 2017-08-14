@@ -55,19 +55,21 @@ module.exports = async (function(app, fundation) {
     let HTML = ''
 
     renderStream.on('error', err => {
-      // the vue app should handle all 404's
-      if (err && err.code === '404') {
-        res.status(404).end('404 | Page Not Found')
-        return
-      } else if (err && err.code === '301') {
-        // handle 301 redirects
-        res.redirect(301, err.url)
-        return
+      if (_.get(err, 'type', '') === 'redirect') {
+        return res.redirect(_.get(err, 'code', 301), _.get(err, 'url', ''))
       }
-      // Render Error Page
-      res.status(500).end('Internal Error 500')
-      // logRequest(req.method, 500, req.url)
+
+      // all errors should be handled in the view app
       console.error(err)
+
+      if (_.get(err, 'code')) {
+        res.status(_.get(err, 'code'))
+        return res.end('Error')
+      }
+
+      // Generic catchall
+      res.status(500).end('Internal Error 500')
+
     })
 
     // Build the HTML for the page
