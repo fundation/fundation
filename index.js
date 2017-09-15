@@ -25,15 +25,19 @@ module.exports = function fundation (options) {
     // Config
     require('./lib/config.js')(parent)
 
-    async (function(){
+    var promises = []
+
+    promises.push(require('./middleware/vue.js')(parent, self))
+
+    Promise.all(promises)
+    .then(async (function(){
       require('./middleware/static.js')(parent, self)
-      require('./middleware/vue.js')(parent, self)
       require('./middleware/middleware.js')(parent, self)
       require('./middleware/controllers.js')(parent, self)
 
       console.log('Fundation Ready!')
       console.log('')
-    })();
+    }));
 
   });
 

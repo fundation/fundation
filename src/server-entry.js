@@ -1,6 +1,11 @@
 import { app, router, store } from './app'
+import { sync } from 'vuex-router-sync'
 
 const isDev = process.env.NODE_ENV !== 'production'
+
+// Sync the router with the vuex store.
+// This registers `store.state.route`
+sync(store, router)
 
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
