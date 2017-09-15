@@ -3,7 +3,6 @@ import App from '../../../App.vue'
 import store from '../../../store'
 import router from '../../../router'
 import meta from 'vue-meta'
-import { sync } from 'vuex-router-sync'
 import * as plugins from '../../../plugins'
 import * as filters from '../../../filters'
 import axios from 'axios'
@@ -12,10 +11,6 @@ import cookie from 'vue-cookie'
 // https://medium.com/the-vue-point/retiring-vue-resource-871a82880af4#.w5c4snp5p
 // access this.$http like in vue-resource
 Vue.prototype.$http = axios
-
-// Sync the router with the vuex store.
-// This registers `store.state.route`
-sync(store, router)
 
 // Register global utility filters.
 Object.keys(filters).forEach(key => {
