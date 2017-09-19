@@ -19,7 +19,7 @@ module.exports = function(app) {
     var logDirectory = __dirname + '/../logs';
     fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory);
 
-    // create a rotating write stream 
+    // create a rotating write stream
     var accessLogStream = FileStreamRotator.getStream({
       filename: logDirectory + '/access-%DATE%.log',
       frequency: 'daily',
@@ -28,7 +28,8 @@ module.exports = function(app) {
 
     app.use(morgan('combined', { stream: accessLogStream }));
   } else {
-    app.use(morgan('dev'));
+    var morgan_env = (app.get('env') === 'production') ? 'combined' : 'dev'
+    app.use(morgan(morgan_env));
   }
 
 };
