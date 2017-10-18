@@ -101,7 +101,7 @@ module.exports = async (function(app, fundation) {
 
       HEAD = HEAD.replace(/ data-vue-meta="true"/g, '')
       HTML = HTML.replace('<!--vue-meta-->', HEAD);
-      HTML = HTML.replace('</body>', `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} --></body>`);
+      HTML = HTML.replace('</body>', `<!-- ${require('os').hostname()} ${moment().format('HH:mm:ss MM/DD/YY')} --></body>`);
 
       res.end(HTML)
     })

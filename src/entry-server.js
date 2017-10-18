@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import { app, router, store } from './app'
+import { createApp } from './app'
+import { sync } from 'vuex-router-sync'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -10,6 +11,15 @@ const isDev = process.env.NODE_ENV !== 'production'
 // return a Promise that resolves to the app instance.
 export default context => {
   return new Promise((resolve, reject) => {
+    const { app, router, store } = createApp()
+
+    console.log("")
+    console.log("")
+    console.log("Fundation entry-server.js")
+    console.log("  context.cookies: ", context.cookies)
+
+    store.state.duck = "quack"
+
     // Put the cookies in the store
     if (context.cookies) {
       store.state.cookies = context.cookies
@@ -20,11 +30,23 @@ export default context => {
       store.state.config = context.config
     }
 
+    console.log("")
+    console.log("  store.state", store.state)
+    console.log("------------------------------------")
+    console.log("")
+    console.log("")
+
     // set router's location
     router.push(context.url)
 
+    // sync the router with the vuex store.
+    // this registers `store.state.route`
+    sync(store, router)
+
     // wait until router has resolved possible async hooks
     router.onReady(() => {
+      console.log("Fundation entry-server.js")
+      console.log("router.onReady(() => {")
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
@@ -46,8 +68,11 @@ export default context => {
         // inline the state in the HTML response. This allows the client-side
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
-        // context.state = Buffer.from(JSON.stringify(store.state)).toString('base64')
         context.state = store.state
+
+        console.log("  context.state = store.state")
+        console.log("")
+        console.log("")
         context.meta = meta
         resolve(app)
       }).catch(error => {
