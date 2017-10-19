@@ -9,6 +9,7 @@
     "url": "https://github.com/fundation/fundation"
   },
   "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
     "tag": "vue2.5"
   },
   "engines": {
@@ -63,9 +64,6 @@
     "webpack-node-externals": "1.6.0"
   },
   "devDependencies": {},
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
   "files": [
     "LICENSE",
     "README.md",
