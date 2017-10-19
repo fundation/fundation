@@ -1,6 +1,5 @@
 import 'es6-promise/auto'
 import { createApp } from './app'
-import { sync } from 'vuex-router-sync'
 
 const { app, router, store } = createApp()
 
@@ -9,10 +8,6 @@ const { app, router, store } = createApp()
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__)
 }
-
-// sync the router with the vuex store.
-// this registers `store.state.route`
-sync(store, router)
 
 // wait until router has resolved all async before hooks
 // and async components...

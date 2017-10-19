@@ -1,6 +1,5 @@
 import _ from 'lodash'
 import { createApp } from './app'
-import { sync } from 'vuex-router-sync'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -13,6 +12,16 @@ export default context => {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp()
 
+    const { url } = context
+    const { fullPath } = router.resolve(url).route
+
+    if (fullPath !== url) {
+      return reject({ url: fullPath })
+    }
+
+    // set router's location
+    router.push(url)
+
     // Put the cookies in the store
     if (context.cookies) {
       store.state.cookies = context.cookies
@@ -23,30 +32,24 @@ export default context => {
       store.state.config = context.config
     }
 
-    // set router's location
-    router.push(context.url)
-
-    // sync the router with the vuex store.
-    // this registers `store.state.route`
-    sync(store, router)
-
     // wait until router has resolved possible async hooks
     router.onReady(() => {
       const matchedComponents = router.getMatchedComponents()
       // no matched routes
       if (!matchedComponents.length) {
-        reject({ code: 404 })
+        return reject({ code: 404 })
       }
 
       const meta = app.$meta()
 
-      // Call preFetch hooks on components matched by the route.
+      // Call fetchData hooks on components matched by the route.
       // A preFetch hook dispatches a store action and returns a Promise,
       // which is resolved when the action is complete and store state has been
       // updated.
-      Promise.all(matchedComponents.map(component => {
-        return component.preFetch && component.preFetch(store)
-      })).then(() => {
+      Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
+        store,
+        route: router.currentRoute
+      }))).then(() => {
         // After all preFetch hooks are resolved, our store is now
         // filled with the state needed to render the app.
         // Expose the state on the render context, and let the request handler
@@ -54,7 +57,6 @@ export default context => {
         // store to pick-up the server-side state without having to duplicate
         // the initial data fetching on the client.
         context.state = store.state
-
         context.meta = meta
         resolve(app)
       }).catch(error => {
@@ -69,6 +71,7 @@ export default context => {
         context.meta = meta
         resolve(app)
       })
-    })
+    }, reject)
+
   })
 }
