@@ -7,12 +7,6 @@ const { app, router, store } = createApp()
 // prime the store with server-initialized state.
 // the state is determined during SSR and inlined in the page markup.
 if (window.__INITIAL_STATE__) {
-  console.log("")
-  console.log("")
-  console.log("      store.replaceState(window.__INITIAL_STATE__)")
-  console.log(window.__INITIAL_STATE__)
-  console.log("")
-  console.log("")
   store.replaceState(window.__INITIAL_STATE__)
 }
 
@@ -28,7 +22,6 @@ router.onReady(() => {
   // the data that we already have. Using router.beforeResolve() so that all
   // async components are resolved.
   router.beforeResolve((to, from, next) => {
-    console.log("      router.beforeResolve((to, from, next) => {")
     const matched = router.getMatchedComponents(to)
     const prevMatched = router.getMatchedComponents(from)
     let diffed = false
