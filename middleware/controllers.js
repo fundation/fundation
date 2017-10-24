@@ -62,8 +62,8 @@ module.exports = async (function(app, fundation) {
       // all errors should be handled in the view app
       console.error(err)
 
-      if (app.newrelic) {
-        app.newrelic.noticeError(err)
+      if (_.get(app, 'handleErrors.stream', '')) {
+        app.handleErrors.stream(err)
       }
 
       if (_.get(err, 'code')) {
