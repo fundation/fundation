@@ -62,7 +62,7 @@ module.exports = async (function(app, fundation) {
       // all errors should be handled in the view app
       console.error(err)
 
-      if (_.get(app, 'handleErrors.stream', '')) {
+      if (_.get(app, 'handleErrors.stream', false)) {
         app.handleErrors.stream(err)
       }
 
