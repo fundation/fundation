@@ -1,7 +1,5 @@
 'use strict';
 
-const async = require('asyncawait/async');
-const await = require('asyncawait/await');
 const fs = require('fs')
 const path = require('path')
 const express = require('express')
@@ -29,14 +27,14 @@ module.exports = function fundation (options) {
     promises.push(require('./middleware/vue.js')(parent, self))
 
     Promise.all(promises)
-    .then(async (function(){
+    .then(async function(){
       require('./middleware/static.js')(parent, self)
       require('./middleware/middleware.js')(parent, self)
       require('./middleware/controllers.js')(parent, self)
 
       console.log('Fundation Ready!')
       console.log('')
-    }));
+    });
 
   });
 

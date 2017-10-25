@@ -1,6 +1,6 @@
 {
   "name": "fundation",
-  "version": "1.0.4-vue2.5",
+  "version": "1.0.5-vue2.5",
   "author": "Alexander Chan <fundation@nonstopcoder.com>",
   "description": "Fun and simple way to build a site",
   "license": "MIT",
@@ -13,12 +13,11 @@
     "tag": "vue2.5"
   },
   "engines": {
-    "node": ">= 6.9.1",
+    "node": ">= 8.0.0",
     "npm": ">=3.0"
   },
   "main": "index.js",
   "dependencies": {
-    "asyncawait": "1.0.6",
     "autoprefixer": "7.1.5",
     "axios": "0.16.2",
     "babel-core": "6.26.0",

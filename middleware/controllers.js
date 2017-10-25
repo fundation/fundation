@@ -1,8 +1,6 @@
 'use strict';
 
 const _ = require('lodash')
-const async = require('asyncawait/async')
-const await = require('asyncawait/await')
 const debug = require('debug')('fundation')
 const debugRoutes = require('debug')('fundation:controllers')
 const fs = require('fs')
@@ -18,7 +16,7 @@ var express = require('express')
  * @param {Application} app
  * @api private
  */
-module.exports = async (function(app, fundation) {
+module.exports = async function(app, fundation) {
 
   debug("Setting up Controllers");
 
@@ -41,14 +39,14 @@ module.exports = async (function(app, fundation) {
   //
   await (glob("controllers/*.js", function (error, files) {
     // Add all of the routes
-    files.forEach(async (function (routePath) {
+    files.forEach(async function (routePath) {
       if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
         return;
       }
       // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
       debugRoutes("Route: " + routePath);
       await (require(path.resolve(routePath))(app, fundation));
-    }));
+    });
   }));
 
   //
@@ -107,4 +105,4 @@ module.exports = async (function(app, fundation) {
     })
   });
 
-});
+};
