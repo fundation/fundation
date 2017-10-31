@@ -30,6 +30,7 @@ module.exports = function fundation (options) {
     .then(async function(){
       require('./middleware/static.js')(parent, self)
       require('./middleware/middleware.js')(parent, self)
+      require('./middleware/health.js')(parent, self)
       require('./middleware/controllers.js')(parent, self)
 
       console.log('Fundation Ready!')
