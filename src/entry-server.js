@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import { createApp } from './app'
+import { sync } from 'vuex-router-sync'
 
 const isDev = process.env.NODE_ENV !== 'production'
 
@@ -11,6 +12,8 @@ const isDev = process.env.NODE_ENV !== 'production'
 export default context => {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp()
+
+    sync(store, router)
 
     const { url } = context
     const { fullPath } = router.resolve(url).route
