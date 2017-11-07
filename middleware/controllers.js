@@ -79,7 +79,7 @@ module.exports = async function(app, fundation) {
 
       const m = context.meta.inject()
       const  HEAD = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
-      let HTML = myWritableStreamBuffer.getContentsAsString('utf8')
+      let HTML = writableStreamBuffer.getContentsAsString('utf8')
       HTML = HTML.replace('<!--vue-meta-->', HEAD);
 
       res.status(_.get(context, 'state.statusCode', 200))

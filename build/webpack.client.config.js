@@ -6,7 +6,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const VueSSRClientPlugin = require('vue-server-renderer/client-plugin')
 
 const config = merge(base, {
-  entry: ['babel-polyfill', __dirname + '/../src/entry-client.js'],
+  entry: __dirname + '/../src/entry-client.js',
   resolve: {
     alias: {
       'create-api': './create-api-client.js'
