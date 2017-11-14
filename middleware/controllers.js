@@ -20,23 +20,31 @@ const streamBuffers = require('stream-buffers')
  */
 module.exports = async function(app, fundation) {
 
-  debug("Setting up Controllers");
+  /**
+   * registers each controller in the controllers folder
+   * @return {Promise}
+   */
+  function registerControllers () {
+    return new Promise((resolve, reject) => {
+      glob("controllers/*.js", async function (error, files) {
+        // Add all of the routes
+        files.forEach(async function (routePath) {
+          // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
+          debugRoutes("Route: " + routePath);
+          await require(path.resolve(routePath))(app, fundation)
+        })
 
-  //
-  // Enable case sensitivity
-  // "/Foo" and "/foo" will be treated as seperate routes
-  //
-  app.set('case sensitive routing', true);
+        resolve({})
+      })
+    })
+  }
 
-  // Example: app.r.get('/test', function (req, res, next) {
-  // app.r = express.Router({
-  //   strict: true,
-  //   caseSensitive: true
-  // });
-
-  // app.use(app.r);
-  //
-
+  /**
+   * renders vue output
+   * @param  {Request}   req
+   * @param  {Response}   res
+   * @param  {Function} next
+   */
   function renderVue (req, res, next) {
     const writableStreamBuffer = new streamBuffers.WritableStreamBuffer({
       initialSize: (60 * 1024),   // start at 60 kilobytes.
@@ -87,22 +95,20 @@ module.exports = async function(app, fundation) {
     })
   }
 
+  debug("Setting up Controllers");
+
+  //
+  // Enable case sensitivity
+  // "/Foo" and "/foo" will be treated as seperate routes
+  //
+  app.set('case sensitive routing', true);
+
   app.renderVue = renderVue
 
   //
   // Add routes to express
   //
-  glob("controllers/*.js", function (error, files) {
-    // Add all of the routes
-    files.forEach(async function (routePath) {
-      if ( routePath === 'controllers/before.js' || routePath === 'controllers/after.js' ) {
-        return;
-      }
-      // http://stackoverflow.com/questions/5055853/how-do-you-modularize-node-js-w-express
-      debugRoutes("Route: " + routePath);
-      await (require(path.resolve(routePath))(app, fundation));
-    });
-  })
+  await registerControllers()
 
   //
   // Add in a route for Vue

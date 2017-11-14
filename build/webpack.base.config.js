@@ -1,5 +1,9 @@
 const path = require('path')
 const vueConfig = require('./vue-loader.config')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const webpack = require('webpack')
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -43,7 +47,12 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        loader: 'style-loader!css-loader'
+        use: isProd
+          ? ExtractTextPlugin.extract({
+              use: 'css-loader?minimize',
+              fallback: 'vue-style-loader'
+            })
+          : ['vue-style-loader', 'css-loader']
       },
       {
         test: /\.(eot|svg|ttf|woff|woff2)(\?\S*)?$/,
@@ -58,5 +67,16 @@ module.exports = {
         }
       },
     ]
-  }
+  },
+  plugins: isProd
+    ? [
+        new UglifyJSPlugin(),
+        new webpack.optimize.ModuleConcatenationPlugin(),
+        new ExtractTextPlugin({
+          filename: 'common.css?v=[chunkhash]'
+        })
+      ]
+    : [
+        new FriendlyErrorsPlugin()
+      ]
 }
