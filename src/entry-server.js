@@ -63,10 +63,11 @@ export default context => {
         context.meta = meta
         resolve(app)
       }).catch(error => {
-        if (_.get(error, 'code') === '301' && _.get(error, 'url', false)) {
+        if (_.get(error, 'type', '') === 'redirect') {
           return reject({
-            code: _.get(error, 'code'),
-            url:  _.get(error, 'url')
+            type: _.get(error, 'type', 'redirect'),
+            code: _.get(error, 'code', 301),
+            url: _.get(error, 'url', ''),
           })
         }
 
