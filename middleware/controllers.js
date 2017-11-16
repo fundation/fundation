@@ -86,9 +86,16 @@ module.exports = async function(app, fundation) {
       }
 
       const m = context.meta.inject()
-      const  HEAD = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
+      let vueMeta = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
+      let prependHeadTag = ''
+      if (app.prependToHeadTag && app.prependToHeadTag.length) {
+        app.prependToHeadTag.map(function prependToHeadTag (head) {
+          prependHeadTag += head
+        })
+      }
+
       let HTML = writableStreamBuffer.getContentsAsString('utf8')
-      HTML = HTML.replace('<!--vue-meta-->', HEAD);
+      HTML = HTML.replace('<!--vue-meta-->', `${prependHeadTag}${vueMeta}`)
 
       res.status(_.get(context, 'state.statusCode', 200))
       res.send(HTML.replace('</body>', `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} --></body>`))
