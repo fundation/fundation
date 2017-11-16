@@ -89,8 +89,8 @@ module.exports = async function(app, fundation) {
       let vueMeta = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
       let prependHeadTag = ''
       if (app.prependToHeadTag && app.prependToHeadTag.length) {
-        app.prependToHeadTag.map(function prependToHeadTag (head) {
-          prependHeadTag += head
+        app.prependToHeadTag.map(function (head) {
+          prependHeadTag += head()
         })
       }
 
