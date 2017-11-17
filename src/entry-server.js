@@ -2,8 +2,6 @@ import _ from 'lodash'
 import { createApp } from './app'
 import { sync } from 'vuex-router-sync'
 
-const isDev = process.env.NODE_ENV !== 'production'
-
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
 // state of our application before actually rendering it.

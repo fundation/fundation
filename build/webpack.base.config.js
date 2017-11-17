@@ -2,13 +2,12 @@ const path = require('path')
 const vueConfig = require('./vue-loader.config')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 const webpack = require('webpack')
 
-const isProd = process.env.NODE_ENV === 'production'
+const isProdOrStage = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging'
 
 module.exports = {
-  devtool: isProd
+  devtool: isProdOrStage
     ? false
     : '#cheap-module-eval-source-map',
   output: {
@@ -31,11 +30,12 @@ module.exports = {
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          plugins: ['transform-runtime'],
-          presets: ['es2015', 'stage-2']
+        // exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015']
+          }
         }
       },
       { test: /\.less$/,
@@ -47,7 +47,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: isProd
+        use: isProdOrStage
           ? ExtractTextPlugin.extract({
               use: 'css-loader?minimize',
               fallback: 'vue-style-loader'
@@ -68,9 +68,11 @@ module.exports = {
       },
     ]
   },
-  plugins: isProd
+  plugins: isProdOrStage
     ? [
-        new UglifyJSPlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+          compress: { warnings: false }
+        }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new ExtractTextPlugin({
           filename: 'common.css?v=[chunkhash]'

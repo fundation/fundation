@@ -30,6 +30,10 @@ Vue.use(cookie)
 // https://github.com/declandewet/vue-meta
 Vue.use(meta)
 
+if (process.env.NODE_ENV !== 'production') {
+  Vue.config.devtools = true
+}
+
 // Expose a factory function that creates a fresh set of store, router,
 // app instances on each call (which is called for each SSR request)
 export function createApp () {
