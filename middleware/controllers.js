@@ -56,7 +56,7 @@ module.exports = async function(app, fundation) {
       return res.end('...');
     }
 
-    const handleErrors = (err) => {
+    const handleErrors = (error) => {
       if (_.get(error, 'type', '') === 'redirect' || _.get(error, 'url', false)) {
         return res.redirect(_.get(error, 'code', 301), _.get(error, 'url', ''))
       }
