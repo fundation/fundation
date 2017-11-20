@@ -56,6 +56,27 @@ module.exports = async function(app, fundation) {
       return res.end('...');
     }
 
+    const handleErrors = (err) => {
+      if (_.get(error, 'type', '') === 'redirect' || _.get(error, 'url', false)) {
+        return res.redirect(_.get(error, 'code', 301), _.get(error, 'url', ''))
+      }
+
+      console.error(error)
+      // log error
+      if (error && _.get(app, 'handleErrors.stream', false)) {
+        app.handleErrors.stream(error)
+      }
+
+      // other custom 5xx error codes
+      if (_.get(error, 'code')) {
+        res.status(_.get(error, 'code'))
+        return res.end('Error')
+      }
+
+      // return generic error
+      return res.status(500).end('Internal Error 500')
+    }
+
     const context = { url: req.url, cookies: req.cookies, config: app.get('config') }
     const renderStream = app.renderer.renderToStream(context)
     renderStream.setEncoding('utf8');
@@ -63,26 +84,7 @@ module.exports = async function(app, fundation) {
     pump(renderStream, writableStreamBuffer, function end (error) {
       // error handling
       if (error) {
-        // if a redirect, redirect and return
-        if (_.get(error, 'type', '') === 'redirect') {
-          return res.redirect(_.get(error, 'code', 301), _.get(error, 'url', ''))
-        }
-
-        console.error(error)
-
-        // log error
-        if (error && _.get(app, 'handleErrors.stream', false)) {
-          app.handleErrors.stream(error)
-        }
-
-        // other custom 5xx error codes
-        if (_.get(error, 'code')) {
-          res.status(_.get(error, 'code'))
-          return res.end('Error')
-        }
-
-        // return generic error
-        return res.status(500).end('Internal Error 500')
+        return handleErrors(error)
       }
 
       const m = context.meta.inject()
