@@ -47,7 +47,7 @@ module.exports = async function(app, fundation) {
     return html.replace('</body>', `<!-- ${moment().format('HH:mm:ss MM/DD/YY')} -->
       <!-- ${appHostname} -->
       <!-- ${appPackageVersion} -->
-      </body>`
+      </body>`)
   }
 
   /**
@@ -100,7 +100,7 @@ module.exports = async function(app, fundation) {
 
       const m = context.meta.inject()
       const vueMeta = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
-      HTML = writableStreamBuffer.getContentsAsString('utf8').replace('<!--vue-meta-->', `${prependHeadTag}${vueMeta}`)
+      const HTML = writableStreamBuffer.getContentsAsString('utf8').replace('<!--vue-meta-->', `${vueMeta}`)
       res.status(_.get(context, 'state.statusCode', 200))
       res.send(appendHTMLCommentsToBody(HTML))
     })
