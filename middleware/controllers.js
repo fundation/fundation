@@ -88,7 +88,13 @@ module.exports = async function(app, fundation) {
       return res.status(500).end('Internal Error 500')
     }
 
-    const context = { url: req.url, cookies: req.cookies, config: app.get('config') }
+    const context = {
+      config: app.get('config')
+      cookies: req.cookies,
+      post: req.body,
+      url: req.url,
+    }
+
     const renderStream = app.renderer.renderToStream(context)
     renderStream.setEncoding('utf8');
 

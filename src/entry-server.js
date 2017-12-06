@@ -23,6 +23,10 @@ export default context => {
     // set router's location
     router.push(url)
 
+    if (context.post) {
+      store.state.post = context.post
+    }
+
     // Put the cookies in the store
     if (context.cookies) {
       store.state.cookies = context.cookies
