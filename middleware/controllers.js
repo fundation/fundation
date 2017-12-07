@@ -89,7 +89,7 @@ module.exports = async function(app, fundation) {
     }
 
     const context = {
-      config: app.get('config')
+      config: app.get('config'),
       cookies: req.cookies,
       post: req.body,
       url: req.url,
