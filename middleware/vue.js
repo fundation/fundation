@@ -1,7 +1,8 @@
 'use strict';
 
-const debug = require('debug')('fundation');
-const fs = require('fs');
+const debug = require('debug')('fundation')
+const fs = require('fs')
+const fileExists = require('file-exists')
 const glob = require("glob");
 const path = require('path');
 const LRU = require('lru-cache')
@@ -22,7 +23,13 @@ module.exports = function(app, fundation) {
 
   return new Promise(function(resolve, reject){
 
-    const template = fs.readFileSync(path.resolve(__dirname, '../src/index.template.html'), 'utf-8')
+    let templatePath = path.resolve(__dirname, '../../../index.template.html')
+
+    if (!fileExists.sync(templatePath)) {
+      templatePath = path.resolve(__dirname, '../src/index.template.html')
+    }
+
+    const template = fs.readFileSync(templatePath, 'utf-8')
 
     function createRenderer (bundle, options) {
       // https://github.com/vuejs/vue/blob/dev/packages/vue-server-renderer/README.md#why-use-bundlerenderer
