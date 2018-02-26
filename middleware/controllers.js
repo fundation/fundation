@@ -107,7 +107,7 @@ module.exports = async function(app, fundation) {
       const m = context.meta.inject()
       const vueMeta = m.meta.text() + m.title.text() + m.link.text() + m.style.text() + m.script.text() + m.noscript.text()
       let HTML = writableStreamBuffer.getContentsAsString('utf8').replace('<!--vue-meta-->', `${vueMeta}`)
-      HTML = HTML.replace('<script src="', '<script crossorigin="anonymous" src="')
+      HTML = HTML.replace(/<script src="/g, '<script crossorigin="anonymous" src="')
 
       res.status(_.get(context, 'state.statusCode', 200))
       res.send(appendHTMLCommentsToBody(HTML))
