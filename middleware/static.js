@@ -12,7 +12,10 @@ const isProdOrStage = process.env.NODE_ENV === 'production' || process.env.NODE_
 
 // 60 * 60 * 24 * 30 = 30 days.
 const serve = (path, cache) => express.static(resolve(path), {
-  maxAge: cache && isProdOrStage ? 60 * 60 * 24 * 30 : 0
+  maxAge: cache && isProdOrStage ? 60 * 60 * 24 * 30 : 0,
+  setHeaders: function (res, path, stat) {
+    res.set('Access-Control-Allow-Origin', '*')
+  },
 })
 
 module.exports = function(app, fundation) {
