@@ -13,7 +13,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, '../../../dist'),
     publicPath: '/dist/',
-    filename: '[name].js?v=[hash]'
+    filename: '[name]_[hash].js'
   },
   resolve: { // no clue what this actually does yet
     alias: {
