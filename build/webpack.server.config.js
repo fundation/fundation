@@ -22,7 +22,7 @@ module.exports = merge(base, {
   // https://github.com/liady/webpack-node-externals
   externals: nodeExternals({
     // do not externalize CSS files in case we need to import it from a dep
-    whitelist: [/\.css$/, /lg-*/],
+    whitelist: [/\.css$/, /lg-*/, /lodash-es/, /dynamic-script-loader/],
     newrelic: 'NewRelic'
   }),
   // externals: [ { 'browser-request': true } ],

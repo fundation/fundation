@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import { createApp } from './app'
-
-const isDev = process.env.NODE_ENV !== 'production'
+import { sync } from 'vuex-router-sync'
 
 // This exported function will be called by `bundleRenderer`.
 // This is where we perform data-prefetching to determine the
@@ -12,6 +11,8 @@ export default context => {
   return new Promise((resolve, reject) => {
     const { app, router, store } = createApp()
 
+    sync(store, router)
+
     const { url } = context
     const { fullPath } = router.resolve(url).route
 
@@ -21,6 +22,10 @@ export default context => {
 
     // set router's location
     router.push(url)
+
+    if (context.post) {
+      store.state.post = context.post
+    }
 
     // Put the cookies in the store
     if (context.cookies) {
@@ -60,10 +65,11 @@ export default context => {
         context.meta = meta
         resolve(app)
       }).catch(error => {
-        if (_.get(error, 'code') === '301' && _.get(error, 'url', false)) {
+        if (_.get(error, 'type', '') === 'redirect') {
           return reject({
-            code: _.get(error, 'code'),
-            url:  _.get(error, 'url')
+            type: _.get(error, 'type', 'redirect'),
+            code: _.get(error, 'code', 301),
+            url: _.get(error, 'url', ''),
           })
         }
 

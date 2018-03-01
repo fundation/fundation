@@ -2,8 +2,8 @@ import 'babel-polyfill'
 import Vue from 'vue'
 import { sync } from 'vuex-router-sync'
 import App from '../../../App.vue'
-import store from '../../../store'
-import router from '../../../router'
+import { createStore } from '../../../store'
+import { createRouter } from '../../../router'
 import meta from 'vue-meta'
 import * as plugins from '../../../plugins'
 import * as filters from '../../../filters'
@@ -30,12 +30,15 @@ Vue.use(cookie)
 // https://github.com/declandewet/vue-meta
 Vue.use(meta)
 
+if (process.env.NODE_ENV !== 'production') {
+  Vue.config.devtools = true
+}
+
 // Expose a factory function that creates a fresh set of store, router,
 // app instances on each call (which is called for each SSR request)
 export function createApp () {
-  // sync the router with the vuex store.
-  // this registers `store.state.route`
-  sync(store, router)
+  const store = createStore()
+  const router = createRouter()
 
   // create the app instance.
   // here we inject the router, store and ssr context to all child components,
