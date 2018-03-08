@@ -272,6 +272,7 @@ module.exports = function(app, fundation) {
   app.use('/ui/js/common.js', function(req, res, next){
     res.setHeader('Cache-Control', 'public, max-age='+cacheTime);
     res.setHeader('Content-Type', 'text/javascript');
+    res.setHeader('Access-Control-Allow-Origin', '*');
 
     // Using memory cache in production
     // app.get('env') !== 'development' &&
